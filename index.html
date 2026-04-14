@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Buzzer Game Pro</title>
+<title>Buzzer Cepat Jawab</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -12,13 +12,8 @@
 body {
   font-family: Arial;
   text-align: center;
-  margin: 0;
   background: #111;
   color: white;
-}
-
-.container {
-  padding: 20px;
 }
 
 button {
@@ -41,35 +36,12 @@ button {
   background: red;
   color: white;
 }
-
-.reset {
-  background: orange;
-}
-
-input {
-  padding: 10px;
-  font-size: 18px;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-.card {
-  background: #222;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 10px;
-}
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
-<h1>🎮 GAME RM KEMANG</h1>
+<h1>🎮 Buzzer Cepat Jawab</h1>
 
 <input type="text" id="nama" placeholder="Masukan nama"><br><br>
 
@@ -79,25 +51,13 @@ ul {
 
 <hr>
 
-<h2>🏆 Ranking</h2>
-<ul id="ranking"></ul>
-
-<h2>📜 Riwayat</h2>
-<ul id="history"></ul>
-
-<hr>
-
-<h2>🔐 Admin Panel</h2>
-<input type="password" id="adminPass" placeholder="Password Admin"><br>
+<h2>🔐 Admin</h2>
+<input type="password" id="adminPass" placeholder="Password"><br><br>
 
 <button class="admin" onclick="resetGame()">Reset Ronde</button>
-<button class="reset" onclick="resetScore()">Reset Score</button>
-<button class="reset" onclick="resetHistory()">Reset History</button>
-
-</div>
 
 <script>
-// ================= FIREBASE CONFIG =================
+// ================= FIREBASE =================
 const firebaseConfig = {
   apiKey: "AIzaSyXXXX",
   authDomain: "game-aldi.firebaseapp.com",
@@ -122,25 +82,11 @@ btn.onclick = function() {
   db.ref("game").once("value", snap => {
     if (!snap.val() || !snap.val().clicked) {
 
-      const now = new Date();
-      const waktu = now.toLocaleString();
-
-      // SET WINNER
       db.ref("game").set({
         clicked: true,
         winner: nama
       });
 
-      // SCORE
-      db.ref("score").child(nama).transaction(current => {
-        return (current || 0) + 1;
-      });
-
-      // HISTORY
-      db.ref("history").push({
-        nama: nama,
-        waktu: waktu
-      });
     }
   });
 };
@@ -153,10 +99,10 @@ db.ref("game").on("value", snap => {
     btn.disabled = true;
 
     if (data.winner === namaPlayer) {
-      status.innerText = "🎉 Kamu Menang, kamu bisa jawab!";
+      status.innerText = "🎤 Kamu yang jawab!";
       btn.style.background = "blue";
     } else {
-      status.innerText = "❌ Kamu kurang cepet ! dari: " + data.winner;
+      status.innerText = "❌ Giliran: " + data.winner;
       btn.style.background = "red";
     }
 
@@ -167,65 +113,14 @@ db.ref("game").on("value", snap => {
   }
 });
 
-// ================= RANKING =================
-db.ref("score").on("value", snap => {
-  const data = snap.val() || {};
-  const rankingEl = document.getElementById("ranking");
-  rankingEl.innerHTML = "";
-
-  const sorted = Object.entries(data)
-    .sort((a, b) => b[1] - a[1]);
-
-  sorted.forEach((item, i) => {
-    const li = document.createElement("li");
-    li.className = "card";
-
-    let medal = "";
-    if (i == 0) medal = "🥇";
-    else if (i == 1) medal = "🥈";
-    else if (i == 2) medal = "🥉";
-
-    li.innerText = `${medal} ${item[0]} - ${item[1]} poin`;
-    rankingEl.appendChild(li);
-  });
-});
-
-// ================= HISTORY =================
-db.ref("history").limitToLast(10).on("value", snap => {
-  const historyEl = document.getElementById("history");
-  historyEl.innerHTML = "";
-
-  const data = [];
-  snap.forEach(child => data.push(child.val()));
-  data.reverse();
-
-  data.forEach(item => {
-    const li = document.createElement("li");
-    li.className = "card";
-    li.innerText = `${item.nama} (${item.waktu})`;
-    historyEl.appendChild(li);
-  });
-});
-
 // ================= ADMIN =================
-function checkAdmin() {
-  const pass = document.getElementById("adminPass").value;
-  return pass === "12345";
+function cekAdmin() {
+  return document.getElementById("adminPass").value === "12345";
 }
 
 function resetGame() {
-  if (!checkAdmin()) return alert("Password salah!");
+  if (!cekAdmin()) return alert("Password salah!");
   db.ref("game").set({ clicked: false, winner: "" });
-}
-
-function resetScore() {
-  if (!checkAdmin()) return alert("Password salah!");
-  db.ref("score").set({});
-}
-
-function resetHistory() {
-  if (!checkAdmin()) return alert("Password salah!");
-  db.ref("history").set({});
 }
 </script>
 
