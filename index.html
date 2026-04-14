@@ -153,10 +153,10 @@ db.ref("game").on("value", snap => {
     btn.disabled = true;
 
     if (data.winner === namaPlayer) {
-      status.innerText = "🎉 Kamu Menang!";
+      status.innerText = "🎉 Kamu Menang, kamu bisa jawab!";
       btn.style.background = "blue";
     } else {
-      status.innerText = "❌ Kamu Kalah! Pemenang: " + data.winner;
+      status.innerText = "❌ Kamu kurang cepet ! dari: " + data.winner;
       btn.style.background = "red";
     }
 
