@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Buzzer Cepat Jawab</title>
+<title>Buzzer Pro Anti Delay</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -16,29 +16,31 @@ body {
   color: white;
 }
 
-button {
-  font-size: 20px;
-  padding: 25px;
-  margin: 10px;
-  border: none;
-  border-radius: 10px;
-}
-input {
-  width: 240px;
-  height: 34px;
-  font-size: 26px;
-  border-radius: 20px;
-  border: none;
-  outline: none;
-  text-align: center;
-}
-
 .buzzer {
-  width: 200px;
-  height: 200px;
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
   background: limegreen;
   font-size: 30px;
+}
+
+.buzzer:active {
+  transform: scale(0.95);
+}
+
+input {
+  width: 250px;
+  height: 40px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 18px;
+}
+
+button {
+  padding: 15px;
+  margin: 10px;
+  border: none;
+  border-radius: 10px;
 }
 
 .admin {
@@ -50,7 +52,7 @@ input {
 
 <body>
 
-<h1>🎮 GAME RM KEMANG 🎮</h1>
+<h1>🎮 RM KEMANG GAMES</h1>
 
 <input type="text" id="nama" placeholder="Masukan nama"><br><br>
 
@@ -60,13 +62,12 @@ input {
 
 <hr>
 
-<h2>🔐 Admin</h2>
+<h3>🔐 Admin</h3>
 <input type="password" id="adminPass" placeholder="Password"><br><br>
-
 <button class="admin" onclick="resetGame()">Reset Ronde</button>
 
 <script>
-// ================= FIREBASE =================
+// FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyXXXX",
   authDomain: "game-aldi.firebaseapp.com",
@@ -76,31 +77,33 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ================= VARIABLE =================
 const btn = document.getElementById("btn");
 const status = document.getElementById("status");
+
 let namaPlayer = "";
 
-// ================= CLICK =================
+// ================= CLICK (ANTI TABRAKAN)
 btn.onclick = function() {
   const nama = document.getElementById("nama").value;
   if (!nama) return alert("Isi nama dulu!");
 
   namaPlayer = nama;
 
-  db.ref("game").once("value", snap => {
-    if (!snap.val() || !snap.val().clicked) {
+  const gameRef = db.ref("game");
 
-      db.ref("game").set({
+  gameRef.transaction(current => {
+    if (current === null || current.clicked === false) {
+      return {
         clicked: true,
-        winner: nama
-      });
-
+        winner: nama,
+        time: firebase.database.ServerValue.TIMESTAMP
+      };
     }
+    return; // kalau sudah ada yang menang → batal
   });
 };
 
-// ================= LISTENER =================
+// ================= LISTENER
 db.ref("game").on("value", snap => {
   const data = snap.val() || {};
 
@@ -108,10 +111,10 @@ db.ref("game").on("value", snap => {
     btn.disabled = true;
 
     if (data.winner === namaPlayer) {
-      status.innerText = "✅ Kamu yang jawab!";
+      status.innerText = "✅ KAMU BOLEH JAWAB!";
       btn.style.background = "blue";
     } else {
-      status.innerText = "❌ Kamu Kalah Cepet Dari : " + data.winner;
+      status.innerText = "❌ KALAH CEPET, DARI: " + data.winner;
       btn.style.background = "red";
     }
 
@@ -122,14 +125,14 @@ db.ref("game").on("value", snap => {
   }
 });
 
-// ================= ADMIN =================
+// ================= ADMIN
 function cekAdmin() {
-  return document.getElementById("adminPass").value === "0000";
+  return document.getElementById("adminPass").value === "00";
 }
 
 function resetGame() {
   if (!cekAdmin()) return alert("Password salah!");
-  db.ref("game").set({ clicked: false, winner: "" });
+  db.ref("game").set({ clicked: false });
 }
 </script>
 
