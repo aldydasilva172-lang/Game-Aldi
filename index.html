@@ -41,7 +41,7 @@ button {
 
 <body>
 
-<h1>🎮 Buzzer Cepat Jawab</h1>
+<h1>🎮 GAME RM KEMANG 🎮</h1>
 
 <input type="text" id="nama" placeholder="Masukan nama"><br><br>
 
@@ -99,10 +99,10 @@ db.ref("game").on("value", snap => {
     btn.disabled = true;
 
     if (data.winner === namaPlayer) {
-      status.innerText = "🎤 Kamu yang jawab!";
+      status.innerText = "✅ Kamu yang jawab!";
       btn.style.background = "blue";
     } else {
-      status.innerText = "❌ Giliran: " + data.winner;
+      status.innerText = "❌ Kamu Kalah Cepet Dari : " + data.winner;
       btn.style.background = "red";
     }
 
@@ -115,7 +115,7 @@ db.ref("game").on("value", snap => {
 
 // ================= ADMIN =================
 function cekAdmin() {
-  return document.getElementById("adminPass").value === "12345";
+  return document.getElementById("adminPass").value === "0000";
 }
 
 function resetGame() {
