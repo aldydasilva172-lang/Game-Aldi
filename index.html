@@ -69,7 +69,7 @@ ul {
 
 <div class="container">
 
-<h1>🎮 Buzzer Game</h1>
+<h1>🎮 GAME RM KEMANG</h1>
 
 <input type="text" id="nama" placeholder="Masukan nama"><br><br>
 
@@ -107,14 +107,17 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ================= ELEMENT =================
+// ================= VARIABLE =================
 const btn = document.getElementById("btn");
 const status = document.getElementById("status");
+let namaPlayer = "";
 
-// ================= GAME CLICK =================
+// ================= CLICK =================
 btn.onclick = function() {
   const nama = document.getElementById("nama").value;
   if (!nama) return alert("Isi nama dulu!");
+
+  namaPlayer = nama;
 
   db.ref("game").once("value", snap => {
     if (!snap.val() || !snap.val().clicked) {
@@ -142,16 +145,25 @@ btn.onclick = function() {
   });
 };
 
-// ================= LISTENER GAME =================
+// ================= LISTENER =================
 db.ref("game").on("value", snap => {
   const data = snap.val() || {};
 
   if (data.clicked) {
     btn.disabled = true;
-    status.innerText = "🔥 Pemenang: " + data.winner;
+
+    if (data.winner === namaPlayer) {
+      status.innerText = "🎉 Kamu Menang!";
+      btn.style.background = "blue";
+    } else {
+      status.innerText = "❌ Kamu Kalah! Pemenang: " + data.winner;
+      btn.style.background = "red";
+    }
+
   } else {
     btn.disabled = false;
     status.innerText = "";
+    btn.style.background = "limegreen";
   }
 });
 
@@ -198,7 +210,7 @@ db.ref("history").limitToLast(10).on("value", snap => {
 // ================= ADMIN =================
 function checkAdmin() {
   const pass = document.getElementById("adminPass").value;
-  return pass === "12345"; // GANTI PASSWORD
+  return pass === "12345";
 }
 
 function resetGame() {
