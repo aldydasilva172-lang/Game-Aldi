@@ -22,6 +22,7 @@ body {
   border-radius: 50%;
   background: limegreen;
   font-size: 30px;
+  cursor: pointer;
 }
 
 .buzzer:active {
@@ -52,7 +53,7 @@ button {
 
 <body>
 
-<h1>🎮 RM KEMANG GAMES</h1>
+<h1>🎮 RM KEMANG GAME</h1>
 
 <input type="text" id="nama" placeholder="Masukan nama"><br><br>
 
@@ -82,10 +83,15 @@ const status = document.getElementById("status");
 
 let namaPlayer = "";
 
-// ================= CLICK (ANTI TABRAKAN)
+// ================= CLICK (ANTI TABRAKAN + GETAR)
 btn.onclick = function() {
   const nama = document.getElementById("nama").value;
   if (!nama) return alert("Isi nama dulu!");
+
+  // 🔥 EFEK GETAR
+  if (navigator.vibrate) {
+    navigator.vibrate([100, 50, 100]); // pola getar
+  }
 
   namaPlayer = nama;
 
@@ -99,11 +105,11 @@ btn.onclick = function() {
         time: firebase.database.ServerValue.TIMESTAMP
       };
     }
-    return; // kalau sudah ada yang menang → batal
+    return; // kalau sudah ada pemenang
   });
 };
 
-// ================= LISTENER
+// ================= LISTENER REALTIME
 db.ref("game").on("value", snap => {
   const data = snap.val() || {};
 
