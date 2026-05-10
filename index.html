@@ -18,7 +18,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-
 *{
   margin:0;
   padding:0;
@@ -26,685 +25,236 @@
 }
 
 body{
-
   font-family:'Poppins',sans-serif;
-
   min-height:100vh;
-
   overflow:hidden;
-
   color:white;
-
   background:
   linear-gradient(rgba(5,5,15,0.72),rgba(5,5,15,0.92)),
   url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1600&auto=format&fit=crop');
-
   background-size:cover;
   background-position:center;
   background-attachment:fixed;
-
 }
 
-/* GLOW */
-
-body::before{
-
+/* glow */
+body::before,
+body::after{
   content:'';
-
   position:fixed;
-
   width:450px;
   height:450px;
-
-  background:
-  rgba(0,255,255,0.16);
-
   border-radius:50%;
-
   filter:blur(120px);
+}
 
+body::before{
+  background:rgba(0,255,255,0.16);
   top:-120px;
   left:-120px;
-
 }
 
 body::after{
-
-  content:'';
-
-  position:fixed;
-
-  width:450px;
-  height:450px;
-
-  background:
-  rgba(255,0,255,0.14);
-
-  border-radius:50%;
-
-  filter:blur(120px);
-
+  background:rgba(255,0,255,0.14);
   bottom:-120px;
   right:-120px;
-
 }
-
-/* HEADER */
 
 .topbar{
-
   width:100%;
-
   padding:20px;
-
   text-align:center;
-
   font-family:'Orbitron',sans-serif;
-
   font-size:30px;
   font-weight:900;
-
   letter-spacing:3px;
-
-  background:
-  rgba(255,255,255,0.05);
-
+  background:rgba(255,255,255,0.05);
   backdrop-filter:blur(15px);
-
-  border-bottom:
-  1px solid rgba(255,255,255,0.08);
-
-  text-shadow:
-  0 0 20px cyan;
-
-  box-shadow:
-  0 0 25px rgba(0,255,255,0.15);
-
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  text-shadow:0 0 20px cyan;
 }
-
-/* CONTAINER */
 
 .container{
-
   width:100%;
   height:calc(100vh - 80px);
-
   display:flex;
-
-  flex-direction:column;
-
   justify-content:center;
-
   align-items:center;
-
-  padding:20px;
-
 }
-
-/* CARD */
 
 .card{
-
   width:100%;
   max-width:420px;
-
-  position:relative;
-
-  overflow:hidden;
-
-  background:
-  rgba(15,15,35,0.65);
-
+  background:rgba(15,15,35,0.65);
   backdrop-filter:blur(18px);
-
-  border:
-  1px solid rgba(255,255,255,0.08);
-
+  border:1px solid rgba(255,255,255,0.08);
   border-radius:35px;
-
   padding:30px 20px;
-
   text-align:center;
-
-  box-shadow:
-  0 0 40px rgba(0,0,0,0.45);
-
 }
-
-/* INPUT */
 
 input{
-
   width:100%;
   height:58px;
-
   border:none;
   outline:none;
-
   border-radius:18px;
-
-  background:
-  rgba(255,255,255,0.08);
-
+  background:rgba(255,255,255,0.08);
   color:white;
-
   font-size:18px;
-
   text-align:center;
-
-  border:
-  1px solid rgba(255,255,255,0.08);
-
-  transition:0.3s;
-
-}
-
-input:focus{
-
-  border:
-  1px solid cyan;
-
-  box-shadow:
-  0 0 20px cyan;
-
-}
-
-input::placeholder{
-
-  color:#ccc;
-
-}
-
-/* BUZZER */
-
-.buzzer-wrap{
-
-  display:flex;
-
-  justify-content:center;
-
-  margin-top:35px;
-
 }
 
 .buzzer{
-
   width:230px;
   height:230px;
-
   border:none;
-
   border-radius:50%;
-
-  cursor:pointer;
-
-  position:relative;
-
-  overflow:hidden;
-
-  font-family:'Orbitron',sans-serif;
-
+  margin-top:35px;
   font-size:34px;
   font-weight:900;
-
+  font-family:'Orbitron';
   color:white;
-
-  background:
-  linear-gradient(145deg,#00f0ff,#0066ff);
-
-  box-shadow:
-
-  0 0 30px #00f0ff,
-  0 0 70px rgba(0,240,255,0.45),
-  inset 0 -12px 20px rgba(0,0,0,0.35);
-
-  transition:0.2s;
-
+  cursor:pointer;
+  background:linear-gradient(145deg,#00f0ff,#0066ff);
+  box-shadow:0 0 30px #00f0ff;
 }
-
-.buzzer:hover{
-
-  transform:scale(1.03);
-
-}
-
-.buzzer:active{
-
-  transform:scale(0.95);
-
-}
-
-/* SHINE */
-
-.buzzer::before{
-
-  content:'';
-
-  position:absolute;
-
-  width:100%;
-  height:100%;
-
-  background:
-  linear-gradient(
-  120deg,
-  transparent,
-  rgba(255,255,255,0.35),
-  transparent);
-
-  top:0;
-  left:-100%;
-
-  animation:shine 3s infinite;
-
-}
-
-@keyframes shine{
-
-  100%{
-    left:100%;
-  }
-
-}
-
-/* STATUS */
 
 #status{
-
-  margin-top:28px;
-
-  font-size:28px;
+  margin-top:25px;
+  font-size:26px;
   font-weight:700;
-
-  line-height:1.5;
-
-  text-shadow:
-  0 0 15px rgba(255,255,255,0.3);
-
 }
-
-/* ================= MINI KLASMEN */
 
 .klasemen{
-
   position:fixed;
-
   top:90px;
   right:15px;
-
   width:180px;
-
   padding:12px;
-
+  background:rgba(15,15,35,0.78);
   border-radius:22px;
-
-  background:
-  rgba(15,15,35,0.78);
-
   backdrop-filter:blur(18px);
-
-  border:
-  1px solid rgba(255,255,255,0.08);
-
-  box-shadow:
-  0 0 25px rgba(0,0,0,0.35);
-
-  z-index:999;
-
-}
-
-.klasemen h2{
-
-  font-size:13px;
-
-  margin-bottom:12px;
-
-  text-align:center;
-
-  color:#00f0ff;
-
-  font-family:'Orbitron',sans-serif;
-
-  letter-spacing:1px;
-
-}
-
-.player{
-
-  margin-bottom:10px;
-
 }
 
 .player-name{
-
   display:flex;
-
   justify-content:space-between;
-
   font-size:10px;
-
   margin-bottom:4px;
-
-  font-weight:600;
-
 }
 
 .bar{
-
   width:100%;
-
   height:10px;
-
-  background:
-  rgba(255,255,255,0.08);
-
-  border-radius:30px;
-
+  background:rgba(255,255,255,0.08);
+  border-radius:20px;
   overflow:hidden;
-
 }
 
 .fill{
-
   height:100%;
-
-  border-radius:30px;
-
-  background:
-
-  linear-gradient(
-
-  90deg,
-
-  rgba(0,240,255,0.4),
-
-  rgba(138,46,255,0.4),
-
-  rgba(255,0,212,0.4)
-
-  );
-
-  box-shadow:
-
-  0 0 10px rgba(0,240,255,0.25);
-
-  transition:0.5s;
-
+  background:linear-gradient(90deg,#00f0ff,#ff00d4);
 }
-
-/* FOOTER */
-
-.footer{
-
-  margin-top:22px;
-
-  font-size:10px;
-
-  opacity:0.7;
-
-  letter-spacing:1px;
-
-}
-
-/* MOBILE */
-
-@media(max-width:600px){
-
-  .topbar{
-    font-size:26px;
-  }
-
-  .buzzer{
-    width:210px;
-    height:210px;
-    font-size:30px;
-  }
-
-  #status{
-    font-size:24px;
-  }
-
-  .klasemen{
-
-    width:155px;
-
-    top:82px;
-    right:10px;
-
-    padding:10px;
-
-  }
-
-  .player-name{
-
-    font-size:9px;
-
-  }
-
-  .bar{
-
-    height:8px;
-
-  }
-
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="topbar">
-RM KEMANG GAMES
-</div>
-
-<!-- MINI KLASMEN -->
+<div class="topbar">RM KEMANG GAMES</div>
 
 <div class="klasemen">
-
 <h2>🏆 TOP PLAYER</h2>
-
 <div id="ranking"></div>
-
 </div>
 
 <div class="container">
-
 <div class="card">
 
-<input
-type="text"
-id="nama"
-placeholder="MASUKKAN NAMA DISINI !">
+<input type="text" id="nama" placeholder="MASUKKAN NAMA DISINI !">
 
-<div class="buzzer-wrap">
+<button id="btn" class="buzzer">TAP!</button>
 
-<button
-id="btn"
-class="buzzer">
-
-TAP!
-
-</button>
+<h2 id="status">🔥 SIAPKAN JARI!</h2>
 
 </div>
-
-<h2 id="status">
-🔥 SIAPKAN JARI!
-</h2>
-
-<div class="footer">
-GAME ALDI
-</div>
-
-</div>
-
 </div>
 
 <script>
-
-// ================= FIREBASE
+// FIREBASE
 const firebaseConfig = {
-
   apiKey:"AIzaSyXXXX",
-
-  authDomain:
-  "game-aldi.firebaseapp.com",
-
-  databaseURL:
-  "https://game-aldi-default-rtdb.asia-southeast1.firebasedatabase.app"
-
+  authDomain:"game-aldi.firebaseapp.com",
+  databaseURL:"https://game-aldi-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
 firebase.initializeApp(firebaseConfig);
-
 const db = firebase.database();
 
-const btn =
-document.getElementById("btn");
-
-const status =
-document.getElementById("status");
+const btn = document.getElementById("btn");
+const status = document.getElementById("status");
 
 let namaPlayer = "";
 
-
-// ================= BUZZER
+// BUZZER
 btn.onclick = async function(){
 
-  const nama =
-  document.getElementById("nama")
-  .value.trim();
-
+  const nama = document.getElementById("nama").value.trim();
   if(!nama){
-
     alert("Isi nama!");
     return;
-
   }
 
   namaPlayer = nama;
-
   btn.disabled = true;
 
-  try{
+  await db.ref("game").transaction((current)=>{
 
-    await db.ref("game").transaction((current)=>{
+    if(!current || current.clicked !== true){
+      return {
+        clicked:true,
+        player:nama,
+        timestamp:Date.now()
+      };
+    }
 
-      // HANYA 1 PEMENANG
-      if(
-        current === null ||
-        current.clicked !== true
-      ){
-
-        return {
-
-          clicked:true,
-
-          player:nama,
-
-          timestamp:Date.now()
-
-        };
-
-      }
-
-      return;
-
-    });
-
-  }catch(err){
-
-    console.log(err);
-
-    btn.disabled = false;
-
-  }
+    return;
+  });
 
 };
 
-
-// ================= REALTIME GAME
+// GAME REALTIME
 db.ref("game").on("value", snap => {
 
   const data = snap.val();
 
   if(!data){
-
-    resetGameUI();
+    reset();
     return;
-
   }
 
-  // ADA PEMENANG
-  if(data.clicked === true){
+  if(data.clicked){
 
     btn.disabled = true;
 
-    btn.style.pointerEvents =
-    "none";
-
-    const winner =
-    data.player;
-
-    // MENANG
-    if(winner === namaPlayer){
-
-      status.innerHTML =
-      "✅ KAMU BOLEH JAWAB!";
-
-      btn.style.background =
-      "linear-gradient(145deg,#00ff99,#00c3ff)";
-
-      if(navigator.vibrate){
-
-        navigator.vibrate([200,100,200]);
-
-      }
-
+    if(data.player === namaPlayer){
+      status.innerHTML = "✅ KAMU BOLEH JAWAB!";
+    } else {
+      status.innerHTML = "❌ KALAH CEPAT DARI <br>" + data.player;
     }
 
-    // KALAH
-    else{
-
-      status.innerHTML =
-      "❌ KALAH CEPAT DARI <br>"+winner;
-
-      btn.style.background =
-      "linear-gradient(145deg,#ff004c,#ff7a00)";
-
-    }
-
-  }
-
-  // RESET
-  else{
-
-    resetGameUI();
-
+  } else {
+    reset();
   }
 
 });
 
-
-// ================= RESET UI
-function resetGameUI(){
-
+function reset(){
   btn.disabled = false;
-
-  btn.style.pointerEvents =
-  "auto";
-
-  btn.style.background =
-  "linear-gradient(145deg,#00f0ff,#0066ff)";
-
-  status.innerHTML =
-  "🔥 SIAPKAN JARI!";
-
+  status.innerHTML = "🔥 SIAPKAN JARI!";
 }
 
-
-// ================= KLASMEN
+// ================= LEADERBOARD FIX FULL
 db.ref("ranking").on("value", snap => {
 
   const data = snap.val() || {};
@@ -713,75 +263,46 @@ db.ref("ranking").on("value", snap => {
 
   for(let nama in data){
 
+    let scoreValue = 0;
+
+    if(typeof data[nama] === "number"){
+      scoreValue = data[nama];
+    } else if(typeof data[nama] === "object"){
+      scoreValue = data[nama]?.score || 0;
+    }
+
     arr.push({
-
-      nama:nama,
-      score:data[nama]
-
+      nama,
+      score: scoreValue
     });
 
   }
 
   arr.sort((a,b)=>b.score-a.score);
 
-  let max =
-  arr[0] ? arr[0].score : 1;
+  let max = arr[0]?.score || 1;
 
   let html = "";
 
-  arr.forEach((item,index)=>{
+  arr.forEach((p,i)=>{
 
-    let persen =
-    (item.score/max)*100;
+    let persen = (p.score / max) * 100;
 
     html += `
-
-    <div class="player">
-
+    <div>
       <div class="player-name">
-
-        <span>
-        ${index+1}. ${item.nama}
-        </span>
-
-        <span>
-        ${item.score}
-        </span>
-
+        <span>${i+1}. ${p.nama}</span>
+        <span>${p.score}</span>
       </div>
-
       <div class="bar">
-
-        <div
-        class="fill"
-        style="width:${persen}%">
-        </div>
-
+        <div class="fill" style="width:${persen}%"></div>
       </div>
-
-    </div>
-
-    `;
-
+    </div>`;
   });
 
-  document
-  .getElementById("ranking")
-  .innerHTML = html;
+  document.getElementById("ranking").innerHTML = html;
 
 });
-
-
-// ================= AUTO RELOAD CACHE
-window.onpageshow = function(event){
-
-  if(event.persisted){
-
-    window.location.reload();
-
-  }
-
-};
 
 </script>
 
