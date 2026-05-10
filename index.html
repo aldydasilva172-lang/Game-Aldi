@@ -619,6 +619,7 @@ db.ref("game").on("value", snap => {
 
   const data = snap.val();
 
+  // SUPPORT RESET .remove()
   if(!data){
 
     resetGameUI();
@@ -699,12 +700,13 @@ db.ref("ranking").on("value", snap => {
 
   let arr = [];
 
+  // FIX RANKING BUG
   for(let nama in data){
 
     arr.push({
 
-      nama:nama,
-      score:data[nama]
+      nama:data[nama].name || nama,
+      score:data[nama].score || 0
 
     });
 
