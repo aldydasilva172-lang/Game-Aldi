@@ -2,72 +2,126 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>GAME ALDI</title>
+<title>RM KEMANG GAMES</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <style>
-body {
-  font-family: Arial;
-  text-align: center;
-  background: #111;
-  color: white;
+
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0f0f0f;
+  color:white;
+  text-align:center;
 }
 
-.buzzer {
-  width: 250px;
-  height: 250px;
-  border-radius: 50%;
-  background: limegreen;
-  font-size: 30px;
+.topbar{
+  background:#111;
+  padding:18px;
+  font-size:30px;
+  font-weight:bold;
+  box-shadow:0 0 20px lime;
 }
 
-.buzzer:active {
-  transform: scale(0.95);
+.container{
+  padding:20px;
 }
 
-input {
-  width: 250px;
-  height: 40px;
-  border-radius: 10px;
-  text-align: center;
-  font-size: 18px;
+input{
+  width:90%;
+  max-width:350px;
+  height:55px;
+  border:none;
+  border-radius:15px;
+  text-align:center;
+  font-size:20px;
 }
 
-button {
-  padding: 15px;
-  margin: 10px;
-  border: none;
-  border-radius: 10px;
+.buzzer{
+  margin-top:25px;
+  width:250px;
+  height:250px;
+  border-radius:50%;
+  border:none;
+  background:limegreen;
+  color:white;
+  font-size:35px;
+  font-weight:bold;
+  box-shadow:0 0 40px lime;
 }
 
-.admin {
-  background: red;
-  color: white;
+#status{
+  margin-top:25px;
+  font-size:30px;
 }
+
+.klasemen{
+  margin-top:40px;
+  background:#1a1a1a;
+  padding:20px;
+  border-radius:20px;
+}
+
+.player{
+  margin:12px 0;
+}
+
+.player-name{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:5px;
+}
+
+.bar{
+  width:100%;
+  height:22px;
+  background:#333;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.fill{
+  height:100%;
+  background:limegreen;
+  border-radius:20px;
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>🎮 RM KEMANG GAMES</h1>
+<div class="topbar">
+🏆 RM KEMANG GAMES
+</div>
 
-<input type="text" id="nama" placeholder="Masukan nama"><br><br>
+<div class="container">
 
-<button id="btn" class="buzzer">TEKAN!</button>
+<input type="text" id="nama" placeholder="Masukan nama">
+
+<br><br>
+
+<button id="btn" class="buzzer">
+TEKAN!
+</button>
 
 <h2 id="status"></h2>
 
-<hr>
+<div class="klasemen">
 
-<h3>🔐 Admin</h3>
-<input type="password" id="adminPass" placeholder="Password"><br><br>
-<button class="admin" onclick="resetGame()">Reset Ronde</button>
+<h2>🏅 KLASMEN</h2>
+
+<div id="ranking"></div>
+
+</div>
+
+</div>
 
 <script>
-// FIREBASE
+
 const firebaseConfig = {
   apiKey: "AIzaSyXXXX",
   authDomain: "game-aldi.firebaseapp.com",
@@ -75,65 +129,138 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+
 const db = firebase.database();
 
 const btn = document.getElementById("btn");
-const status = document.getElementById("status");
 
 let namaPlayer = "";
 
-// ================= CLICK (ANTI TABRAKAN)
-btn.onclick = function() {
+// ================= BUZZER
+btn.onclick = function(){
+
   const nama = document.getElementById("nama").value;
-  if (!nama) return alert("Isi nama dulu!");
+
+  if(!nama){
+    alert("Isi nama!");
+    return;
+  }
 
   namaPlayer = nama;
 
-  const gameRef = db.ref("game");
+  db.ref("game").transaction(current => {
 
-  gameRef.transaction(current => {
-    if (current === null || current.clicked === false) {
+    if(current == null || current.clicked == false){
+
       return {
-        clicked: true,
-        winner: nama,
-        time: firebase.database.ServerValue.TIMESTAMP
+        clicked:true,
+        winner:nama
       };
+
     }
-    return; // kalau sudah ada yang menang → batal
+
+    return;
+
   });
+
 };
 
-// ================= LISTENER
+// ================= GAME LISTENER
 db.ref("game").on("value", snap => {
+
   const data = snap.val() || {};
 
-  if (data.clicked) {
+  if(data.clicked){
+
     btn.disabled = true;
 
-    if (data.winner === namaPlayer) {
-      status.innerText = "✅ KAMU BOLEH JAWAB!";
+    if(data.winner == namaPlayer){
+
+      document.getElementById("status")
+      .innerHTML = "✅ KAMU MENANG!";
+
       btn.style.background = "blue";
-    } else {
-      status.innerText = "❌ KALAH CEPET, DARI: " + data.winner;
+
+      navigator.vibrate(200);
+
+    }else{
+
+      document.getElementById("status")
+      .innerHTML =
+      "❌ TERLAMBAT!<br>🏆 " + data.winner;
+
       btn.style.background = "red";
+
     }
 
-  } else {
+  }else{
+
     btn.disabled = false;
-    status.innerText = "";
+
+    document.getElementById("status").innerHTML = "";
+
     btn.style.background = "limegreen";
+
   }
+
 });
 
-// ================= ADMIN
-function cekAdmin() {
-  return document.getElementById("adminPass").value === "00";
-}
+// ================= KLASMEN
+db.ref("ranking").on("value", snap => {
 
-function resetGame() {
-  if (!cekAdmin()) return alert("Password salah!");
-  db.ref("game").set({ clicked: false });
-}
+  const data = snap.val() || {};
+
+  let arr = [];
+
+  for(let nama in data){
+
+    arr.push({
+      nama:nama,
+      score:data[nama]
+    });
+
+  }
+
+  arr.sort((a,b)=>b.score-a.score);
+
+  let max = arr[0] ? arr[0].score : 1;
+
+  let html = "";
+
+  arr.forEach((item,index)=>{
+
+    let persen =
+    (item.score/max)*100;
+
+    html += `
+
+    <div class="player">
+
+      <div class="player-name">
+        <span>
+        ${index+1}. ${item.nama}
+        </span>
+
+        <span>
+        ${item.score} POIN
+        </span>
+      </div>
+
+      <div class="bar">
+        <div class="fill"
+        style="width:${persen}%"></div>
+      </div>
+
+    </div>
+
+    `;
+
+  });
+
+  document.getElementById("ranking").innerHTML = html;
+
+});
+
 </script>
 
 </body>
