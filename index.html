@@ -177,7 +177,7 @@ db.ref("game").on("value", snap => {
     if(data.winner == namaPlayer){
 
       document.getElementById("status")
-      .innerHTML = "✅ KAMU MENANG!";
+      .innerHTML = "✅ KAMU BOLEH JAWAB!";
 
       btn.style.background = "blue";
 
@@ -187,7 +187,7 @@ db.ref("game").on("value", snap => {
 
       document.getElementById("status")
       .innerHTML =
-      "❌ TERLAMBAT!<br>🏆 " + data.winner;
+      "❌ KAMU KALAH CEPAT DARI !<br> " + data.winner;
 
       btn.style.background = "red";
 
