@@ -38,7 +38,6 @@ input{
   border-radius:15px;
   text-align:center;
   font-size:20px;
-  outline:none;
 }
 
 .buzzer{
@@ -52,16 +51,11 @@ input{
   font-size:35px;
   font-weight:bold;
   box-shadow:0 0 40px lime;
-  transition:0.2s;
-}
-
-.buzzer:active{
-  transform:scale(0.95);
 }
 
 #status{
   margin-top:25px;
-  font-size:30px;
+  font-size:28px;
   font-weight:bold;
   line-height:1.5;
 }
@@ -94,7 +88,6 @@ input{
 .fill{
   height:100%;
   background:limegreen;
-  border-radius:20px;
 }
 
 </style>
@@ -115,11 +108,17 @@ placeholder="Masukkan nama">
 
 <br><br>
 
-<button id="btn" class="buzzer">
+<button
+id="btn"
+class="buzzer">
+
 TEKAN!
+
 </button>
 
-<h2 id="status"></h2>
+<h2 id="status">
+🔥 SIAPKAN JARI!
+</h2>
 
 <div class="klasemen">
 
@@ -136,7 +135,7 @@ TEKAN!
 // ================= FIREBASE
 const firebaseConfig = {
 
-  apiKey: "AIzaSyXXXX",
+  apiKey:"AIzaSyXXXX",
 
   authDomain:
   "game-aldi.firebaseapp.com",
@@ -161,8 +160,7 @@ btn.onclick = function(){
 
   const nama =
   document.getElementById("nama")
-  .value
-  .trim();
+  .value.trim();
 
   if(!nama){
 
@@ -175,8 +173,7 @@ btn.onclick = function(){
 
   db.ref("game").transaction(current => {
 
-    // kalau belum ada yg pencet
-    if(current == null || current.clicked == false){
+    if(current == null || current.clicked === false){
 
       const jam =
       new Date().toLocaleTimeString("id-ID");
@@ -185,17 +182,9 @@ btn.onclick = function(){
 
         clicked:true,
 
-        // SUPPORT ADMIN BARU
         player:nama,
 
-        time:jam,
-
-        // SUPPORT ADMIN LAMA
-        winner:nama,
-
-        firstPlayer:nama,
-
-        waktu:jam
+        time:jam
 
       };
 
@@ -208,26 +197,25 @@ btn.onclick = function(){
 };
 
 
-// ================= GAME LISTENER
+// ================= REALTIME GAME
 db.ref("game").on("value", snap => {
 
   const data = snap.val() || {};
 
-  // ambil nama pemenang support semua versi
-  const winnerName =
-  data.player ||
-  data.winner ||
-  data.firstPlayer ||
-  "";
+  const winner =
+  data.player || "";
 
-  if(data.clicked){
+  // ================= ADA PEMENANG
+  if(data.clicked === true){
 
     btn.disabled = true;
 
-    // kalau dia yg tercepat
-    if(winnerName == namaPlayer){
+    btn.style.pointerEvents = "none";
 
-      document.getElementById("status")
+    if(winner === namaPlayer){
+
+      document
+      .getElementById("status")
       .innerHTML =
       "✅ KAMU BOLEH JAWAB!";
 
@@ -235,31 +223,39 @@ db.ref("game").on("value", snap => {
 
       if(navigator.vibrate){
 
-        navigator.vibrate(200);
+        navigator.vibrate([200,100,200]);
 
       }
 
     }else{
 
-      document.getElementById("status")
+      document
+      .getElementById("status")
       .innerHTML =
 
       "❌ KALAH CEPAT DARI<br>" +
 
-      winnerName;
+      winner;
 
       btn.style.background = "red";
 
     }
 
-  }else{
+  }
+
+  // ================= RESET
+  else{
 
     btn.disabled = false;
 
-    document.getElementById("status")
-    .innerHTML = "";
+    btn.style.pointerEvents = "auto";
 
     btn.style.background = "limegreen";
+
+    document
+    .getElementById("status")
+    .innerHTML =
+    "🔥 SIAPKAN JARI!";
 
   }
 
@@ -327,7 +323,8 @@ db.ref("ranking").on("value", snap => {
 
   });
 
-  document.getElementById("ranking")
+  document
+  .getElementById("ranking")
   .innerHTML = html;
 
 });
