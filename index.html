@@ -786,6 +786,138 @@ window.onpageshow = function(event){
   }
 
 };
+// ================= DRAG TOP PLAYER
+
+const klasemen =
+document.querySelector(".klasemen");
+
+let isDragging = false;
+
+let offsetX = 0;
+let offsetY = 0;
+
+// POSISI AWAL RESPONSIVE
+let startX =
+window.innerWidth - 210;
+
+let startY =
+window.innerHeight - 230;
+
+klasemen.style.left =
+startX + "px";
+
+klasemen.style.top =
+startY + "px";
+
+klasemen.style.right = "auto";
+klasemen.style.bottom = "auto";
+
+// ================= TOUCH START
+function dragStart(x,y){
+
+  isDragging = true;
+
+  const rect =
+  klasemen.getBoundingClientRect();
+
+  offsetX = x - rect.left;
+  offsetY = y - rect.top;
+
+}
+
+// ================= DRAG MOVE
+function dragMove(x,y){
+
+  if(!isDragging) return;
+
+  let newX = x - offsetX;
+  let newY = y - offsetY;
+
+  // BATAS LAYAR
+  const maxX =
+  window.innerWidth -
+  klasemen.offsetWidth;
+
+  const maxY =
+  window.innerHeight -
+  klasemen.offsetHeight;
+
+  newX =
+  Math.max(0,
+  Math.min(newX,maxX));
+
+  newY =
+  Math.max(0,
+  Math.min(newY,maxY));
+
+  klasemen.style.left =
+  newX + "px";
+
+  klasemen.style.top =
+  newY + "px";
+
+}
+
+// ================= END
+function dragEnd(){
+
+  isDragging = false;
+
+}
+
+// TOUCH HP
+klasemen.addEventListener(
+"touchstart",
+e=>{
+
+  const t = e.touches[0];
+
+  dragStart(
+  t.clientX,
+  t.clientY);
+
+});
+
+document.addEventListener(
+"touchmove",
+e=>{
+
+  const t = e.touches[0];
+
+  dragMove(
+  t.clientX,
+  t.clientY);
+
+});
+
+document.addEventListener(
+"touchend",
+dragEnd);
+
+// MOUSE PC
+klasemen.addEventListener(
+"mousedown",
+e=>{
+
+  dragStart(
+  e.clientX,
+  e.clientY);
+
+});
+
+document.addEventListener(
+"mousemove",
+e=>{
+
+  dragMove(
+  e.clientX,
+  e.clientY);
+
+});
+
+document.addEventListener(
+"mouseup",
+dragEnd);
 
 </script>
 
