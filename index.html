@@ -753,7 +753,7 @@ db.ref("game").on("value", snap => {
     if(winner === namaPlayer){
 
       status.innerHTML =
-      "✅ KAMU BOLEH JAWAB!";
+      "KAMU BOLEH JAWAB!✅";
 
       btn.style.background =
       "linear-gradient(145deg,#00ff99,#00c3ff)";
@@ -770,7 +770,8 @@ db.ref("game").on("value", snap => {
     else{
 
       status.innerHTML =
-      "❌ KALAH CEPAT DARI <br>"+winner;
+      "KAMU KALAH CEPAT DARI ❌ <br>
+        "+winner;
 
       btn.style.background =
       "linear-gradient(145deg,#ff004c,#ff7a00)";
