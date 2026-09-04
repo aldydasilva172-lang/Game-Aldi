@@ -1,21 +1,46 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
 <meta charset="UTF-8">
-<title>RM KEMANG GAMES</title>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>RM KEMANG GAMES</title>
+
 <!-- CACHE OFF -->
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+
+<meta
+http-equiv="Cache-Control"
+content="no-cache, no-store, must-revalidate"
+>
+
+<meta
+http-equiv="Pragma"
+content="no-cache"
+>
+
+<meta
+http-equiv="Expires"
+content="0"
+>
+
 
 <!-- FIREBASE -->
+
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
+
 <!-- FONT -->
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<link
+href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600&display=swap"
+rel="stylesheet"
+>
+
 
 <style>
 
@@ -24,6 +49,7 @@
   padding:0;
   box-sizing:border-box;
 }
+
 
 body{
 
@@ -36,16 +62,24 @@ body{
   color:white;
 
   background:
-  linear-gradient(rgba(5,5,15,0.72),rgba(5,5,15,0.92)),
+
+  linear-gradient(
+    rgba(5,5,15,0.72),
+    rgba(5,5,15,0.92)
+  ),
+
   url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1600&auto=format&fit=crop');
 
   background-size:cover;
+
   background-position:center;
+
   background-attachment:fixed;
 
 }
 
-/* GLOW */
+
+/* ================= GLOW ================= */
 
 body::before{
 
@@ -54,6 +88,7 @@ body::before{
   position:fixed;
 
   width:450px;
+
   height:450px;
 
   background:
@@ -64,9 +99,13 @@ body::before{
   filter:blur(120px);
 
   top:-120px;
+
   left:-120px;
 
+  pointer-events:none;
+
 }
+
 
 body::after{
 
@@ -75,6 +114,7 @@ body::after{
   position:fixed;
 
   width:450px;
+
   height:450px;
 
   background:
@@ -85,11 +125,15 @@ body::after{
   filter:blur(120px);
 
   bottom:-120px;
+
   right:-120px;
+
+  pointer-events:none;
 
 }
 
-/* HEADER */
+
+/* ================= HEADER ================= */
 
 .topbar{
 
@@ -102,6 +146,7 @@ body::after{
   font-family:'Orbitron',sans-serif;
 
   font-size:30px;
+
   font-weight:900;
 
   letter-spacing:3px;
@@ -122,11 +167,13 @@ body::after{
 
 }
 
-/* CONTAINER */
+
+/* ================= CONTAINER ================= */
 
 .container{
 
   width:100%;
+
   height:calc(100vh - 80px);
 
   display:flex;
@@ -141,11 +188,13 @@ body::after{
 
 }
 
-/* CARD */
+
+/* ================= CARD ================= */
 
 .card{
 
   width:100%;
+
   max-width:420px;
 
   position:relative;
@@ -171,14 +220,17 @@ body::after{
 
 }
 
-/* INPUT */
+
+/* ================= INPUT ================= */
 
 input{
 
   width:100%;
+
   height:58px;
 
   border:none;
+
   outline:none;
 
   border-radius:18px;
@@ -199,6 +251,7 @@ input{
 
 }
 
+
 input:focus{
 
   border:
@@ -209,13 +262,15 @@ input:focus{
 
 }
 
+
 input::placeholder{
 
   color:#ccc;
 
 }
 
-/* BUZZER */
+
+/* ================= BUZZER ================= */
 
 .buzzer-wrap{
 
@@ -227,9 +282,11 @@ input::placeholder{
 
 }
 
+
 .buzzer{
 
   width:230px;
+
   height:230px;
 
   border:none;
@@ -245,22 +302,30 @@ input::placeholder{
   font-family:'Orbitron',sans-serif;
 
   font-size:34px;
+
   font-weight:900;
 
   color:white;
 
   background:
-  linear-gradient(145deg,#00f0ff,#0066ff);
+  linear-gradient(
+    145deg,
+    #00f0ff,
+    #0066ff
+  );
 
   box-shadow:
 
   0 0 30px #00f0ff,
+
   0 0 70px rgba(0,240,255,0.45),
+
   inset 0 -12px 20px rgba(0,0,0,0.35);
 
   transition:0.2s;
 
 }
+
 
 .buzzer:hover{
 
@@ -268,13 +333,15 @@ input::placeholder{
 
 }
 
+
 .buzzer:active{
 
   transform:scale(0.95);
 
 }
 
-/* SHINE */
+
+/* ================= SHINE ================= */
 
 .buzzer::before{
 
@@ -283,21 +350,26 @@ input::placeholder{
   position:absolute;
 
   width:100%;
+
   height:100%;
 
   background:
+
   linear-gradient(
-  120deg,
-  transparent,
-  rgba(255,255,255,0.35),
-  transparent);
+    120deg,
+    transparent,
+    rgba(255,255,255,0.35),
+    transparent
+  );
 
   top:0;
+
   left:-100%;
 
   animation:shine 3s infinite;
 
 }
+
 
 @keyframes shine{
 
@@ -307,13 +379,15 @@ input::placeholder{
 
 }
 
-/* STATUS */
+
+/* ================= STATUS ================= */
 
 #status{
 
   margin-top:28px;
 
   font-size:28px;
+
   font-weight:700;
 
   line-height:1.5;
@@ -323,18 +397,21 @@ input::placeholder{
 
 }
 
-/* ================= MINI KLASMEN */
+
+/* ================= KLASMEN ================= */
 
 .klasemen{
 
   position:fixed;
 
   bottom:15px;
+
   right:15px;
 
   width:min(180px,45vw);
 
   max-width:200px;
+
   min-width:140px;
 
   padding:12px;
@@ -366,6 +443,7 @@ input::placeholder{
 
 }
 
+
 .klasemen:active{
 
   cursor:grabbing;
@@ -373,6 +451,7 @@ input::placeholder{
   transform:scale(0.98);
 
 }
+
 
 .klasemen h2{
 
@@ -390,11 +469,13 @@ input::placeholder{
 
 }
 
+
 .player{
 
   margin-bottom:10px;
 
 }
+
 
 .player-name{
 
@@ -409,6 +490,7 @@ input::placeholder{
   font-weight:600;
 
 }
+
 
 .bar{
 
@@ -425,6 +507,7 @@ input::placeholder{
 
 }
 
+
 .fill{
 
   height:100%;
@@ -432,11 +515,13 @@ input::placeholder{
   border-radius:25px;
 
   background:
+
   linear-gradient(
-  90deg,
-  #00f0ff,
-  #8a2eff,
-  #ff00d4);
+    90deg,
+    #00f0ff,
+    #8a2eff,
+    #ff00d4
+  );
 
   box-shadow:
   0 0 10px #00f0ff;
@@ -445,7 +530,8 @@ input::placeholder{
 
 }
 
-/* FOOTER */
+
+/* ================= FOOTER ================= */
 
 .footer{
 
@@ -459,191 +545,350 @@ input::placeholder{
 
 }
 
-/* MOBILE */
+
+/* ================= LOGIN ================= */
+
+.login-screen{
+
+  position:fixed;
+
+  inset:0;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  background:
+  rgba(5,5,15,.92);
+
+  backdrop-filter:blur(12px);
+
+  z-index:99999;
+
+}
+
+
+.login-box{
+
+  width:90%;
+
+  max-width:360px;
+
+  padding:30px;
+
+  border-radius:25px;
+
+  background:
+  rgba(20,20,40,.75);
+
+  border:
+  1px solid rgba(255,255,255,.08);
+
+  text-align:center;
+
+}
+
+
+.login-box h1{
+
+  font-family:'Orbitron',sans-serif;
+
+  margin-bottom:10px;
+
+  color:#00f0ff;
+
+}
+
+
+.login-box p{
+
+  margin-bottom:20px;
+
+  opacity:.8;
+
+}
+
+
+.login-box button{
+
+  width:100%;
+
+  height:55px;
+
+  margin-top:15px;
+
+  border:none;
+
+  border-radius:15px;
+
+  font-size:18px;
+
+  font-weight:bold;
+
+  background:
+  linear-gradient(
+    145deg,
+    #00f0ff,
+    #0066ff
+  );
+
+  color:white;
+
+  cursor:pointer;
+
+}
+
+
+.login-box button:disabled{
+
+  opacity:.5;
+
+}
+
+
+/* ================= LOGIN STATUS ================= */
+
+#loginStatus{
+
+  margin-top:18px;
+
+  font-size:14px;
+
+  line-height:1.6;
+
+  min-height:25px;
+
+  color:#00f0ff;
+
+  font-weight:600;
+
+}
+
+
+/* ================= HIDDEN ================= */
+
+.hidden{
+
+  display:none !important;
+
+}
+
+
+/* ================= MOBILE ================= */
 
 @media(max-width:600px){
 
   .topbar{
+
     font-size:26px;
+
   }
+
 
   .buzzer{
+
     width:210px;
+
     height:210px;
+
     font-size:30px;
+
   }
 
+
   #status{
+
     font-size:24px;
+
   }
+
 
   .klasemen{
 
-  width:160px;
+    width:160px;
 
-  bottom:10px;
-  right:10px;
+    bottom:10px;
 
-  padding:10px;
-}
-  .bar{
-    height:8px;
+    right:10px;
+
+    padding:10px;
+
   }
-}
-  
-.login-screen{
 
-position:fixed;
-inset:0;
 
-display:flex;
-justify-content:center;
-align-items:center;
+  .bar{
 
-background:rgba(5,5,15,.92);
-backdrop-filter:blur(12px);
+    height:8px;
 
-z-index:99999;
-}
-.login-box{
-width:90%;
-max-width:360px;
-
-padding:30px;
-
-border-radius:25px;
-
-background:rgba(20,20,40,.75);
-
-border:1px solid rgba(255,255,255,.08);
-
-text-align:center;
-}
-.login-box h1{
-
-font-family:'Orbitron',sans-serif;
-
-margin-bottom:10px;
-
-color:#00f0ff;
+  }
 
 }
 
-.login-box p{
-
-margin-bottom:20px;
-
-opacity:.8;
-
-}
-
-.login-box button{
-
-width:100%;
-height:55px;
-
-margin-top:15px;
-
-border:none;
-
-border-radius:15px;
-
-font-size:18px;
-
-font-weight:bold;
-
-background:linear-gradient(145deg,#00f0ff,#0066ff);
-
-color:white;
-
-cursor:pointer;
-
-}
 </style>
+
 </head>
 
+
 <body>
+
+
+<!-- ================================================= -->
 <!-- LOGIN -->
-<div id="loginScreen" class="login-screen">
+<!-- ================================================= -->
+
+<div
+id="loginScreen"
+class="login-screen"
+>
 
   <div class="login-box">
 
-    <h1>🎮 RM KEMANG GAMES </h1>
+    <h1>
+      🎮 RM KEMANG GAMES
+    </h1>
 
-    <p>Masukkan nama untuk mulai bermain</p>
+    <p>
+      Masukkan nama untuk mulai bermain
+    </p>
 
     <input
       type="text"
       id="loginNama"
-      placeholder="Nama Kamu">
+      placeholder="Nama Kamu"
+      autocomplete="off"
+    >
 
-    <button id="mulaiBtn">
+    <button
+      id="mulaiBtn"
+    >
       MULAI GAME
     </button>
+
+    <div
+      id="loginStatus"
+    ></div>
 
   </div>
 
 </div>
+
+
+
+<!-- ================================================= -->
+<!-- HEADER -->
+<!-- ================================================= -->
+
 <div class="topbar">
+
 RM KEMANG GAMES
+
 </div>
 
+
+
+<!-- ================================================= -->
 <!-- MINI KLASMEN -->
+<!-- ================================================= -->
 
 <div class="klasemen">
 
-<h2>🏆 TOP PLAYER</h2>
+  <h2>
+    🏆 TOP PLAYER
+  </h2>
 
-<div id="ranking"></div>
+  <div id="ranking"></div>
 
 </div>
+
+
+
+<!-- ================================================= -->
+<!-- GAME -->
+<!-- ================================================= -->
 
 <div class="container">
 
-<div class="card">
+  <div class="card">
 
-<div class="buzzer-wrap">
+    <div class="buzzer-wrap">
 
-<button
-id="btn"
-class="buzzer">
+      <button
+        id="btn"
+        class="buzzer"
+      >
 
-TAP!
+        TAP!
 
-</button>
+      </button>
+
+    </div>
+
+
+    <h2 id="status">
+
+      🔥 SIAPKAN JARI!
+
+    </h2>
+
+
+    <div class="footer">
+
+      OUTING RANCH MARKET 2026
+
+    </div>
+
+  </div>
 
 </div>
 
-<h2 id="status">
-🔥 SIAPKAN JARI!
-</h2>
 
-<div class="footer">
-OUTING RANCH MARKET 2026
-</div>
-
-</div>
-
-</div>
 
 <script>
 
-// ================= FIREBASE
+
+// =================================================
+// FIREBASE
+// =================================================
+
 const firebaseConfig = {
 
-  apiKey:"AIzaSyXXXX",
+  apiKey:
+  "AIzaSyD36RSQ5epRBSbeI9JnEkI2UevOg921xrI",
 
   authDomain:
   "game-aldi.firebaseapp.com",
 
   databaseURL:
-  "https://game-aldi-default-rtdb.asia-southeast1.firebasedatabase.app"
+  "https://game-aldi-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+  projectId:
+  "game-aldi",
+
+  storageBucket:
+  "game-aldi.firebasestorage.app",
+
+  messagingSenderId:
+  "184345142676",
+
+  appId:
+  "1:184345142676:web:f19d19999c897d0ca95b81"
 
 };
 
+
 firebase.initializeApp(firebaseConfig);
 
-const db = firebase.database();
+
+const db =
+firebase.database();
+
+
+
+// =================================================
+// ELEMENT
+// =================================================
 
 const btn =
 document.getElementById("btn");
@@ -651,228 +896,642 @@ document.getElementById("btn");
 const status =
 document.getElementById("status");
 
-let namaPlayer = "";
-
 const loginScreen =
 document.getElementById("loginScreen");
 
-document
-.getElementById("mulaiBtn")
-.onclick = function(){
+const loginNama =
+document.getElementById("loginNama");
 
-document.getElementById("loginNama")
-.addEventListener("keypress",function(e){
-if(e.key==="Enter"){
-document.getElementById("mulaiBtn").click();
+const mulaiBtn =
+document.getElementById("mulaiBtn");
 
-  }
+const loginStatus =
+document.getElementById("loginStatus");
 
-});
-const nama =
-document
-.getElementById("loginNama")
-.value.trim();
 
-if(!nama){
 
-alert("Masukkan nama terlebih dahulu!");
+// =================================================
+// PLAYER ID
+// =================================================
 
-return;
+let playerID =
+localStorage.getItem(
+  "rmKemangPlayerID"
+);
+
+
+if(!playerID){
+
+  playerID =
+    "player_" +
+    Date.now() +
+    "_" +
+    Math.random()
+      .toString(36)
+      .substring(2,8);
+
+
+  localStorage.setItem(
+    "rmKemangPlayerID",
+    playerID
+  );
 
 }
 
-namaPlayer = nama;
 
-loginScreen.style.display = "none";
 
-};
-// ================= BUZZER
-btn.onclick = async function(){
+let namaPlayer = "";
 
-  btn.disabled = true;
+let playerStatus = "";
 
-  try{
+let buzzerLocked = false;
 
-    await db.ref("game").transaction((current)=>{
+let lastClickTime = 0;
 
-      // HANYA 1 PEMENANG
-      if(
-        current === null ||
-        current.clicked !== true
-      ){
 
-  return {
+// Anti double-click
 
-  clicked:true,
+const CLICK_DELAY = 700;
 
-  player:namaPlayer,
-  timestamp:Date.now()
-};
 
-      }
 
-      return;
+// =================================================
+// PLAYER LOGIN
+// =================================================
 
-    });
+mulaiBtn.onclick =
+function(){
 
-  }catch(err){
+  const nama =
+    loginNama.value.trim();
 
-    console.log(err);
 
-    btn.disabled = false;
+  if(!nama){
 
-  }
+    loginStatus.innerHTML =
+      "⚠️ Masukkan nama terlebih dahulu!";
 
-};
-
-// ================= REALTIME GAME
-db.ref("game").on("value", snap => {
-
-  const data = snap.val();
-
-  // SUPPORT RESET .remove()
-  if(!data){
-
-    resetGameUI();
     return;
 
   }
 
-  // ADA PEMENANG
-  if(data.clicked === true){
 
-    btn.disabled = true;
+  namaPlayer =
+    nama;
 
-    btn.style.pointerEvents =
-    "none";
 
-    const winner =
-    data.player;
+  mulaiBtn.disabled =
+    true;
 
-    // MENANG
-    if(winner === namaPlayer){
+  loginNama.disabled =
+    true;
+
+
+  loginStatus.innerHTML =
+    "⏳ Mengirim permintaan ke admin...";
+
+
+  db.ref(
+    "players/" + playerID
+  ).set({
+
+    name:
+      namaPlayer,
+
+    status:
+      "pending",
+
+    timestamp:
+      Date.now()
+
+  });
+
+};
+
+
+
+// =================================================
+// ENTER
+// =================================================
+
+loginNama.addEventListener(
+  "keypress",
+  function(e){
+
+    if(e.key === "Enter"){
+
+      mulaiBtn.click();
+
+    }
+
+  }
+);
+
+
+
+// =================================================
+// PLAYER STATUS REALTIME
+// =================================================
+
+db.ref(
+  "players/" + playerID
+)
+.on(
+  "value",
+  snap => {
+
+    const data =
+      snap.val();
+
+
+    if(!data){
+
+      return;
+
+    }
+
+
+    namaPlayer =
+      data.name ||
+      namaPlayer;
+
+
+    playerStatus =
+      data.status;
+
+
+    // =============================================
+    // PENDING
+    // =============================================
+
+    if(
+      data.status === "pending"
+    ){
+
+      loginScreen
+        .classList
+        .remove("hidden");
+
+
+      loginNama.value =
+        namaPlayer;
+
+
+      loginNama.disabled =
+        true;
+
+
+      mulaiBtn.disabled =
+        true;
+
+
+      loginStatus.innerHTML =
+        "⏳ MENUNGGU PERSETUJUAN ADMIN";
+
+
+      btn.disabled =
+        true;
+
+
+      btn.style.pointerEvents =
+        "none";
+
 
       status.innerHTML =
-      "KAMU BOLEH JAWAB!✅";
+        "⏳ MENUNGGU PERSETUJUAN ADMIN";
 
-      btn.style.background =
-      "linear-gradient(145deg,#00ff99,#00c3ff)";
 
-      if(navigator.vibrate){
+      buzzerLocked =
+        true;
 
-        navigator.vibrate([200,100,200]);
+    }
+
+
+    // =============================================
+    // APPROVED
+    // =============================================
+
+    else if(
+      data.status === "approved"
+    ){
+
+      loginScreen
+        .classList
+        .add("hidden");
+
+
+      btn.disabled =
+        false;
+
+
+      btn.style.pointerEvents =
+        "auto";
+
+
+      buzzerLocked =
+        false;
+
+
+      status.innerHTML =
+        "🔥 SIAPKAN JARI!";
+
+    }
+
+  }
+);
+
+
+
+// =================================================
+// BUZZER
+// =================================================
+
+btn.addEventListener(
+  "click",
+  async function(){
+
+    const now =
+      Date.now();
+
+
+    // =============================================
+    // ANTI SPAM
+    // =============================================
+
+    if(
+      buzzerLocked ||
+
+      btn.disabled ||
+
+      playerStatus !== "approved" ||
+
+      now - lastClickTime <
+      CLICK_DELAY
+    ){
+
+      return;
+
+    }
+
+
+    lastClickTime =
+      now;
+
+
+    buzzerLocked =
+      true;
+
+
+    btn.disabled =
+      true;
+
+
+    btn.style.pointerEvents =
+      "none";
+
+
+    try{
+
+      await db.ref("game")
+      .transaction(
+        current => {
+
+          // =====================================
+          // BELUM ADA PEMENANG
+          // =====================================
+
+          if(
+
+            current === null ||
+
+            current.clicked !== true
+
+          ){
+
+            return {
+
+              clicked:
+                true,
+
+              player:
+                namaPlayer,
+
+              playerID:
+                playerID,
+
+              timestamp:
+                Date.now()
+
+            };
+
+          }
+
+
+          // =====================================
+          // SUDAH ADA PEMENANG
+          // =====================================
+
+          return;
+
+        }
+      );
+
+    }
+
+    catch(error){
+
+      console.log(error);
+
+
+      buzzerLocked =
+        false;
+
+
+      btn.disabled =
+        false;
+
+
+      btn.style.pointerEvents =
+        "auto";
+
+    }
+
+  }
+);
+
+
+
+// =================================================
+// GAME REALTIME
+// =================================================
+
+db.ref("game")
+.on(
+  "value",
+  snap => {
+
+    const data =
+      snap.val();
+
+
+    // =============================================
+    // RESET
+    // =============================================
+
+    if(!data){
+
+      resetGameUI();
+
+      return;
+
+    }
+
+
+    // =============================================
+    // PEMENANG
+    // =============================================
+
+    if(
+      data.clicked === true
+    ){
+
+      btn.disabled =
+        true;
+
+
+      btn.style.pointerEvents =
+        "none";
+
+
+      const winner =
+        data.player;
+
+
+      // =========================================
+      // SAYA PEMENANG
+      // =========================================
+
+      if(
+        data.playerID === playerID
+      ){
+
+        status.innerHTML =
+          "KAMU BOLEH JAWAB!✅";
+
+
+        btn.style.background =
+          "linear-gradient(145deg,#00ff99,#00c3ff)";
+
+
+        if(
+          navigator.vibrate
+        ){
+
+          navigator.vibrate([
+            200,
+            100,
+            200
+          ]);
+
+        }
+
+      }
+
+
+      // =========================================
+      // PEMAIN LAIN
+      // =========================================
+
+      else{
+
+        status.innerHTML =
+          `KAMU KALAH CEPAT DARI ❌<br>${escapeHTML(winner)}`;
+
+
+        btn.style.background =
+          "linear-gradient(145deg,#ff004c,#ff7a00)";
 
       }
 
     }
 
-    // KALAH
-    else{
-  
-    status.innerHTML = `KAMU KALAH CEPAT DARI ❌ <br>${winner}`;
-  
-    btn.style.background =
-      "linear-gradient(145deg,#ff004c,#ff7a00)";
-
-    }
-
   }
+);
 
-  // RESET
-  else{
 
-    resetGameUI();
 
-  }
+// =================================================
+// RESET GAME UI
+// =================================================
 
-});
-
-// ================= RESET UI
 function resetGameUI(){
 
-  btn.disabled = false;
+  // Kalau belum approved,
+  // jangan aktifkan buzzer.
+
+  if(
+    playerStatus !== "approved"
+  ){
+
+    return;
+
+  }
+
+
+  buzzerLocked =
+    false;
+
+
+  lastClickTime =
+    0;
+
+
+  btn.disabled =
+    false;
+
 
   btn.style.pointerEvents =
-  "auto";
+    "auto";
+
 
   btn.style.background =
-  "linear-gradient(145deg,#00f0ff,#0066ff)";
+    "linear-gradient(145deg,#00f0ff,#0066ff)";
+
 
   status.innerHTML =
-  "🔥 SIAPKAN JARI!";
+    "🔥 SIAPKAN JARI!";
 
 }
 
-// ================= KLASMEN
-db.ref("ranking").on("value", snap => {
 
-  const data = snap.val() || {};
 
-  let arr = [];
+// =================================================
+// RANKING
+// =================================================
 
-  // FIX RANKING BUG
-  for(let nama in data){
+db.ref("ranking")
+.on(
+  "value",
+  snap => {
 
-    arr.push({
+    const data =
+      snap.val() || {};
 
-      nama:data[nama].name || nama,
-      score:data[nama].score || 0
 
-    });
+    let arr = [];
 
-  }
 
-  arr.sort((a,b)=>b.score-a.score);
+    for(
+      let nama in data
+    ){
 
-  let max =
-  arr[0] ? arr[0].score : 1;
+      arr.push({
 
-  let html = "";
+        nama:
+          data[nama].name ||
+          nama,
 
-  arr.forEach((item,index)=>{
+        score:
+          data[nama].score ||
+          0
 
-    let persen =
-    (item.score/max)*100;
+      });
 
-    html += `
+    }
 
-    <div class="player">
 
-      <div class="player-name">
+    arr.sort(
+      (a,b) =>
+        b.score - a.score
+    );
 
-        <span>
-        ${index+1}. ${item.nama}
-        </span>
 
-        <span>
-        ${item.score}
-        </span>
+    let max =
+      arr[0]
+        ? arr[0].score
+        : 1;
 
-      </div>
 
-      <div class="bar">
+    let html = "";
 
-        <div
-        class="fill"
-        style="width:${persen}%">
+
+    arr.forEach(
+      (item,index) => {
+
+        let persen =
+          (item.score / max) *
+          100;
+
+
+        html += `
+
+        <div class="player">
+
+          <div class="player-name">
+
+            <span>
+              ${escapeHTML(item.nama)}
+            </span>
+
+            <span>
+              ${item.score}
+            </span>
+
+          </div>
+
+          <div class="bar">
+
+            <div
+              class="fill"
+              style="width:${persen}%"
+            ></div>
+
+          </div>
+
         </div>
 
-      </div>
+        `;
 
-    </div>
+      }
+    );
 
-    `;
 
-  });
+    document
+      .getElementById("ranking")
+      .innerHTML =
+        html;
 
-  document
-  .getElementById("ranking")
-  .innerHTML = html;
+  }
+);
 
-});
 
-// ================= AUTO RELOAD CACHE
-window.onpageshow = function(event){
+
+// =================================================
+// ESCAPE HTML
+// =================================================
+
+function escapeHTML(text){
+
+  const div =
+    document.createElement("div");
+
+
+  div.textContent =
+    text || "";
+
+
+  return div.innerHTML;
+
+}
+
+
+
+// =================================================
+// CACHE
+// =================================================
+
+window.onpageshow =
+function(event){
 
   if(event.persisted){
 
@@ -881,140 +1540,234 @@ window.onpageshow = function(event){
   }
 
 };
-// ================= DRAG TOP PLAYER
+
+
+
+// =================================================
+// DRAG KLASMEN
+// =================================================
 
 const klasemen =
-document.querySelector(".klasemen");
+document.querySelector(
+  ".klasemen"
+);
 
-let isDragging = false;
 
-let offsetX = 0;
-let offsetY = 0;
+let isDragging =
+  false;
 
-// POSISI AWAL RESPONSIVE
+let offsetX =
+  0;
+
+let offsetY =
+  0;
+
+
 let startX =
-window.innerWidth - 210;
+  window.innerWidth -
+  210;
+
 
 let startY =
-window.innerHeight - 230;
+  window.innerHeight -
+  230;
+
 
 klasemen.style.left =
-startX + "px";
+  startX + "px";
+
 
 klasemen.style.top =
-startY + "px";
+  startY + "px";
 
-klasemen.style.right = "auto";
-klasemen.style.bottom = "auto";
 
-// ================= TOUCH START
+klasemen.style.right =
+  "auto";
+
+
+klasemen.style.bottom =
+  "auto";
+
+
+
 function dragStart(x,y){
 
-  isDragging = true;
+  isDragging =
+    true;
+
 
   const rect =
-  klasemen.getBoundingClientRect();
+    klasemen.getBoundingClientRect();
 
-  offsetX = x - rect.left;
-  offsetY = y - rect.top;
+
+  offsetX =
+    x - rect.left;
+
+
+  offsetY =
+    y - rect.top;
 
 }
 
-// ================= DRAG MOVE
+
+
 function dragMove(x,y){
 
-  if(!isDragging) return;
+  if(!isDragging)
+    return;
 
-  let newX = x - offsetX;
-  let newY = y - offsetY;
 
-  // BATAS LAYAR
+  let newX =
+    x - offsetX;
+
+
+  let newY =
+    y - offsetY;
+
+
   const maxX =
-  window.innerWidth -
-  klasemen.offsetWidth;
+    window.innerWidth -
+    klasemen.offsetWidth;
+
 
   const maxY =
-  window.innerHeight -
-  klasemen.offsetHeight;
+    window.innerHeight -
+    klasemen.offsetHeight;
+
 
   newX =
-  Math.max(0,
-  Math.min(newX,maxX));
+    Math.max(
+      0,
+      Math.min(
+        newX,
+        maxX
+      )
+    );
+
 
   newY =
-  Math.max(0,
-  Math.min(newY,maxY));
+    Math.max(
+      0,
+      Math.min(
+        newY,
+        maxY
+      )
+    );
+
 
   klasemen.style.left =
-  newX + "px";
+    newX + "px";
+
 
   klasemen.style.top =
-  newY + "px";
+    newY + "px";
 
 }
 
-// ================= END
+
+
 function dragEnd(){
 
-  isDragging = false;
+  isDragging =
+    false;
 
 }
 
-// TOUCH HP
+
+
+// =================================================
+// TOUCH
+// =================================================
+
 klasemen.addEventListener(
-"touchstart",
-e=>{
+  "touchstart",
+  e => {
 
-  const t = e.touches[0];
+    const t =
+      e.touches[0];
 
-  dragStart(
-  t.clientX,
-  t.clientY);
 
-});
+    dragStart(
+      t.clientX,
+      t.clientY
+    );
 
-document.addEventListener(
-"touchmove",
-e=>{
+  }
+);
 
-  const t = e.touches[0];
-
-  dragMove(
-  t.clientX,
-  t.clientY);
-
-});
 
 document.addEventListener(
-"touchend",
-dragEnd);
+  "touchmove",
+  e => {
 
-// MOUSE PC
+    if(!isDragging)
+      return;
+
+
+    const t =
+      e.touches[0];
+
+
+    dragMove(
+      t.clientX,
+      t.clientY
+    );
+
+
+    e.preventDefault();
+
+  },
+  {
+    passive:false
+  }
+);
+
+
+document.addEventListener(
+  "touchend",
+  dragEnd
+);
+
+
+
+// =================================================
+// MOUSE
+// =================================================
+
 klasemen.addEventListener(
-"mousedown",
-e=>{
+  "mousedown",
+  e => {
 
-  dragStart(
-  e.clientX,
-  e.clientY);
+    dragStart(
+      e.clientX,
+      e.clientY
+    );
 
-});
+  }
+);
 
-document.addEventListener(
-"mousemove",
-e=>{
-
-  dragMove(
-  e.clientX,
-  e.clientY);
-
-});
 
 document.addEventListener(
-"mouseup",
-dragEnd);
+  "mousemove",
+  e => {
+
+    dragMove(
+      e.clientX,
+      e.clientY
+    );
+
+  }
+);
+
+
+document.addEventListener(
+  "mouseup",
+  dragEnd
+);
+
 
 </script>
 
 </body>
+
 </html>
