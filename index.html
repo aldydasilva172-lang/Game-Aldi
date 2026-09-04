@@ -9,8 +9,6 @@
 
 <title>RM KEMANG GAMES</title>
 
-<!-- CACHE OFF -->
-
 <meta
 http-equiv="Cache-Control"
 content="no-cache, no-store, must-revalidate"
@@ -776,9 +774,7 @@ input::placeholder{
 <body>
 
 
-<!-- ================================================= -->
 <!-- LOGIN -->
-<!-- ================================================= -->
 
 <div
 id="loginScreen"
@@ -817,10 +813,7 @@ class="login-screen"
 </div>
 
 
-
-<!-- ================================================= -->
 <!-- HEADER -->
-<!-- ================================================= -->
 
 <div class="topbar">
 
@@ -829,10 +822,7 @@ RM KEMANG GAMES
 </div>
 
 
-
-<!-- ================================================= -->
 <!-- MINI KLASMEN -->
-<!-- ================================================= -->
 
 <div class="klasemen">
 
@@ -845,10 +835,7 @@ RM KEMANG GAMES
 </div>
 
 
-
-<!-- ================================================= -->
 <!-- GAME -->
-<!-- ================================================= -->
 
 <div class="container">
 
@@ -887,7 +874,6 @@ RM KEMANG GAMES
   </div>
 
 </div>
-
 
 
 <script>
@@ -930,7 +916,6 @@ const db =
 firebase.database();
 
 
-
 // =================================================
 // ELEMENT
 // =================================================
@@ -955,7 +940,6 @@ document.getElementById("loginStatus");
 
 const spamText =
 document.getElementById("spamText");
-
 
 
 // =================================================
@@ -996,7 +980,6 @@ if(!playerID){
 }
 
 
-
 let namaPlayer = "";
 
 let playerStatus = "";
@@ -1012,15 +995,9 @@ let lastClickTime = 0;
 // ANTI SPAM
 // =================================================
 
-// Jarak maksimum untuk dianggap double tap
-
 const SPAM_DELAY = 2000;
 
-
-// Proteksi tambahan klik Firebase lama
-
 const CLICK_DELAY = 700;
-
 
 
 // =================================================
@@ -1059,7 +1036,7 @@ function pasangPlayerListener(){
 
 
       // =========================================
-      // DATA PLAYER SUDAH DIHAPUS
+      // PLAYER DIHAPUS
       // =========================================
 
       if(!data){
@@ -1083,7 +1060,6 @@ function pasangPlayerListener(){
         loginNama.value = "";
 
         loginNama.disabled = false;
-
 
         mulaiBtn.disabled = false;
 
@@ -1109,10 +1085,6 @@ function pasangPlayerListener(){
           "👤 MASUKKAN NAMA";
 
 
-        // Buat ID baru agar
-        // RESET PEMAIN benar-benar
-        // memulai dari awal.
-
         playerID =
           buatPlayerID();
 
@@ -1124,7 +1096,6 @@ function pasangPlayerListener(){
 
 
         pasangPlayerListener();
-
 
         return;
 
@@ -1265,8 +1236,25 @@ function pasangPlayerListener(){
           false;
 
 
-        status.innerHTML =
-          "🔥 SIAPKAN JARI!";
+        /*
+          Kalau game sedang aktif,
+          listener game akan menampilkan
+          hasil menang/kalah.
+        */
+
+        const currentGame =
+          window.currentGameData;
+
+
+        if(
+          !currentGame ||
+          currentGame.clicked !== true
+        ){
+
+          status.innerHTML =
+            "🔥 SIAPKAN JARI!";
+
+        }
 
       }
 
@@ -1282,7 +1270,6 @@ function pasangPlayerListener(){
 
 
 pasangPlayerListener();
-
 
 
 // =================================================
@@ -1323,7 +1310,8 @@ function(){
 
   db.ref(
     "players/" + playerID
-  ).set({
+  )
+  .set({
 
     name:
       namaPlayer,
@@ -1358,7 +1346,6 @@ function(){
 };
 
 
-
 // =================================================
 // ENTER
 // =================================================
@@ -1377,7 +1364,6 @@ loginNama.addEventListener(
 );
 
 
-
 // =================================================
 // BUZZER
 // =================================================
@@ -1391,7 +1377,7 @@ btn.addEventListener(
 
 
     // =============================================
-    // PLAYER SPAM
+    // SPAM SUDAH AKTIF
     // =============================================
 
     if(playerSpam){
@@ -1415,23 +1401,25 @@ btn.addEventListener(
 
 
     // =============================================
-    // DOUBLE TAP
+    // DOUBLE TAP ≤ 2 DETIK
     // =============================================
 
     if(
       lastClickTime > 0 &&
-
-      now - lastClickTime <=
-      SPAM_DELAY
+      now - lastClickTime <= SPAM_DELAY
     ){
-
-      // =========================================
-      // LANGSUNG SIMPAN SPAM KE FIREBASE
-      // =========================================
 
       playerSpam = true;
 
       buzzerLocked = true;
+
+
+      btn.disabled =
+        false;
+
+
+      btn.style.pointerEvents =
+        "auto";
 
 
       btn.classList
@@ -1446,12 +1434,22 @@ btn.addEventListener(
         "⛔ MENUNGGU RESET GAME";
 
 
-      await db.ref(
-        "players/" +
-        playerID +
-        "/spam"
-      )
-      .set(true);
+      try{
+
+        await db.ref(
+          "players/" +
+          playerID +
+          "/spam"
+        )
+        .set(true);
+
+      }
+
+      catch(error){
+
+        console.log(error);
+
+      }
 
 
       return;
@@ -1464,7 +1462,15 @@ btn.addEventListener(
     // =============================================
 
     if(
-      buzzerLocked ||
+      buzzerLocked
+    ){
+
+      return;
+
+    }
+
+
+    if(
       btn.disabled
     ){
 
@@ -1482,23 +1488,23 @@ btn.addEventListener(
 
 
     /*
-      Jangan mematikan tombol secara
-      permanen di sini.
-
-      Tombol tetap bisa menerima
-      tap kedua supaya sistem
-      bisa mendeteksi SPAM.
+      Tombol sengaja tetap menerima
+      tap berikutnya agar double tap
+      bisa dideteksi sebagai SPAM.
     */
+
+    btn.disabled =
+      false;
+
+    btn.style.pointerEvents =
+      "auto";
+
 
     try{
 
       await db.ref("game")
       .transaction(
         current => {
-
-          // =====================================
-          // BELUM ADA PEMENANG
-          // =====================================
 
           if(
 
@@ -1527,10 +1533,6 @@ btn.addEventListener(
           }
 
 
-          // =====================================
-          // SUDAH ADA PEMENANG
-          // =====================================
-
           return;
 
         }
@@ -1552,10 +1554,12 @@ btn.addEventListener(
 );
 
 
-
 // =================================================
 // GAME REALTIME
 // =================================================
+
+window.currentGameData = null;
+
 
 db.ref("game")
 .on(
@@ -1564,6 +1568,10 @@ db.ref("game")
 
     const data =
       snap.val();
+
+
+    window.currentGameData =
+      data;
 
 
     // =============================================
@@ -1580,16 +1588,10 @@ db.ref("game")
 
 
     // =============================================
-    // PEMENANG
+    // JIKA SPAM
     // =============================================
 
-    if(
-      data.clicked === true
-    ){
-
-      // Jangan mengunci pointer.
-      // Supaya tap kedua tetap bisa
-      // terdeteksi sebagai SPAM.
+    if(playerSpam){
 
       btn.disabled =
         false;
@@ -1597,6 +1599,54 @@ db.ref("game")
 
       btn.style.pointerEvents =
         "auto";
+
+
+      btn.classList
+        .add("spam");
+
+
+      spamText.innerHTML =
+        "⚠ SPAM!";
+
+
+      status.innerHTML =
+        "⛔ MENUNGGU RESET GAME";
+
+
+      buzzerLocked =
+        true;
+
+
+      return;
+
+    }
+
+
+    // =============================================
+    // GAME SUDAH PUNYA PEMENANG
+    // =============================================
+
+    if(
+      data.clicked === true
+    ){
+
+      /*
+        Jangan disable tombol total.
+
+        Kita masih membutuhkan tombol
+        untuk mendeteksi double tap.
+      */
+
+      btn.disabled =
+        false;
+
+
+      btn.style.pointerEvents =
+        "auto";
+
+
+      buzzerLocked =
+        false;
 
 
       const winner =
@@ -1613,6 +1663,14 @@ db.ref("game")
 
         status.innerHTML =
           "KAMU BOLEH JAWAB!✅";
+
+
+        btn.classList
+          .remove("spam");
+
+
+        spamText.innerHTML =
+          "";
 
 
         btn.style.background =
@@ -1644,6 +1702,14 @@ db.ref("game")
           `KAMU KALAH CEPAT DARI ❌<br>${escapeHTML(winner)}`;
 
 
+        btn.classList
+          .remove("spam");
+
+
+        spamText.innerHTML =
+          "";
+
+
         btn.style.background =
           "linear-gradient(145deg,#ff004c,#ff7a00)";
 
@@ -1655,15 +1721,16 @@ db.ref("game")
 );
 
 
-
 // =================================================
 // RESET GAME UI
 // =================================================
 
 function resetGameUI(){
 
-  // Kalau belum approved,
-  // jangan aktifkan buzzer.
+  /*
+    Kalau belum approved,
+    jangan aktifkan buzzer.
+  */
 
   if(
     playerStatus !== "approved"
@@ -1674,19 +1741,24 @@ function resetGameUI(){
   }
 
 
-  // Kalau masih terkena SPAM,
-  // jangan aktifkan.
+  /*
+    Kalau masih SPAM,
+    tetap terkunci.
+  */
 
   if(playerSpam){
 
     btn.disabled =
       false;
 
+
     btn.style.pointerEvents =
       "auto";
 
+
     btn.classList
       .add("spam");
+
 
     spamText.innerHTML =
       "⚠ SPAM!";
@@ -1737,7 +1809,6 @@ function resetGameUI(){
     "🔥 SIAPKAN JARI!";
 
 }
-
 
 
 // =================================================
@@ -1840,7 +1911,6 @@ db.ref("ranking")
 );
 
 
-
 // =================================================
 // ESCAPE HTML
 // =================================================
@@ -1860,7 +1930,6 @@ function escapeHTML(text){
 }
 
 
-
 // =================================================
 // CACHE
 // =================================================
@@ -1875,7 +1944,6 @@ function(event){
   }
 
 };
-
 
 
 // =================================================
@@ -1924,7 +1992,6 @@ klasemen.style.bottom =
   "auto";
 
 
-
 function dragStart(x,y){
 
   isDragging =
@@ -1943,7 +2010,6 @@ function dragStart(x,y){
     y - rect.top;
 
 }
-
 
 
 function dragMove(x,y){
@@ -2000,14 +2066,12 @@ function dragMove(x,y){
 }
 
 
-
 function dragEnd(){
 
   isDragging =
     false;
 
 }
-
 
 
 // =================================================
@@ -2062,7 +2126,6 @@ document.addEventListener(
   "touchend",
   dragEnd
 );
-
 
 
 // =================================================
