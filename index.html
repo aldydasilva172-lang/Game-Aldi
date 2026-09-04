@@ -341,6 +341,48 @@ input::placeholder{
 }
 
 
+/* ================= SPAM ================= */
+
+.buzzer.spam{
+
+  background:
+  linear-gradient(
+    145deg,
+    #ff0000,
+    #8b0000
+  ) !important;
+
+  box-shadow:
+
+  0 0 30px #ff0000,
+
+  0 0 80px rgba(255,0,0,0.65),
+
+  inset 0 -12px 20px rgba(0,0,0,0.4) !important;
+
+  cursor:not-allowed;
+
+}
+
+
+#spamText{
+
+  margin-top:15px;
+
+  color:#ff3333;
+
+  font-family:'Orbitron',sans-serif;
+
+  font-size:18px;
+
+  font-weight:900;
+
+  text-shadow:
+  0 0 15px red;
+
+}
+
+
 /* ================= SHINE ================= */
 
 .buzzer::before{
@@ -826,6 +868,9 @@ RM KEMANG GAMES
     </div>
 
 
+    <div id="spamText"></div>
+
+
     <h2 id="status">
 
       🔥 SIAPKAN JARI!
@@ -908,11 +953,28 @@ document.getElementById("mulaiBtn");
 const loginStatus =
 document.getElementById("loginStatus");
 
+const spamText =
+document.getElementById("spamText");
+
 
 
 // =================================================
 // PLAYER ID
 // =================================================
+
+function buatPlayerID(){
+
+  return (
+    "player_" +
+    Date.now() +
+    "_" +
+    Math.random()
+      .toString(36)
+      .substring(2,8)
+  );
+
+}
+
 
 let playerID =
 localStorage.getItem(
@@ -923,12 +985,7 @@ localStorage.getItem(
 if(!playerID){
 
   playerID =
-    "player_" +
-    Date.now() +
-    "_" +
-    Math.random()
-      .toString(36)
-      .substring(2,8);
+    buatPlayerID();
 
 
   localStorage.setItem(
@@ -944,14 +1001,287 @@ let namaPlayer = "";
 
 let playerStatus = "";
 
+let playerSpam = false;
+
 let buzzerLocked = false;
 
 let lastClickTime = 0;
 
 
-// Anti double-click
+// =================================================
+// ANTI SPAM
+// =================================================
+
+// Jarak maksimum untuk dianggap double tap
+
+const SPAM_DELAY = 2000;
+
+
+// Proteksi tambahan klik Firebase lama
 
 const CLICK_DELAY = 700;
+
+
+
+// =================================================
+// PLAYER LISTENER
+// =================================================
+
+let playerRef = null;
+
+let playerListener = null;
+
+
+function pasangPlayerListener(){
+
+  if(playerRef && playerListener){
+
+    playerRef.off(
+      "value",
+      playerListener
+    );
+
+  }
+
+
+  playerRef =
+    db.ref(
+      "players/" +
+      playerID
+    );
+
+
+  playerListener =
+    snap => {
+
+      const data =
+        snap.val();
+
+
+      // =========================================
+      // DATA PLAYER SUDAH DIHAPUS
+      // =========================================
+
+      if(!data){
+
+        namaPlayer = "";
+
+        playerStatus = "";
+
+        playerSpam = false;
+
+        buzzerLocked = true;
+
+        lastClickTime = 0;
+
+
+        loginScreen
+          .classList
+          .remove("hidden");
+
+
+        loginNama.value = "";
+
+        loginNama.disabled = false;
+
+
+        mulaiBtn.disabled = false;
+
+
+        loginStatus.innerHTML =
+          "👤 MASUKKAN NAMA UNTUK BERMAIN";
+
+
+        btn.disabled = true;
+
+        btn.style.pointerEvents =
+          "none";
+
+
+        btn.classList
+          .remove("spam");
+
+
+        spamText.innerHTML = "";
+
+
+        status.innerHTML =
+          "👤 MASUKKAN NAMA";
+
+
+        // Buat ID baru agar
+        // RESET PEMAIN benar-benar
+        // memulai dari awal.
+
+        playerID =
+          buatPlayerID();
+
+
+        localStorage.setItem(
+          "rmKemangPlayerID",
+          playerID
+        );
+
+
+        pasangPlayerListener();
+
+
+        return;
+
+      }
+
+
+      namaPlayer =
+        data.name ||
+        namaPlayer;
+
+
+      playerStatus =
+        data.status;
+
+
+      playerSpam =
+        data.spam === true;
+
+
+      // =========================================
+      // SPAM
+      // =========================================
+
+      if(playerSpam){
+
+        buzzerLocked = true;
+
+
+        btn.disabled = false;
+
+        btn.style.pointerEvents =
+          "auto";
+
+
+        btn.classList
+          .add("spam");
+
+
+        spamText.innerHTML =
+          "⚠ SPAM!";
+
+
+        status.innerHTML =
+          "⛔ MENUNGGU RESET GAME";
+
+
+        return;
+
+      }
+
+
+      // =========================================
+      // PENDING
+      // =========================================
+
+      if(
+        data.status === "pending"
+      ){
+
+        loginScreen
+          .classList
+          .remove("hidden");
+
+
+        loginNama.value =
+          namaPlayer;
+
+
+        loginNama.disabled =
+          true;
+
+
+        mulaiBtn.disabled =
+          true;
+
+
+        loginStatus.innerHTML =
+          "⏳ MENUNGGU PERSETUJUAN ADMIN";
+
+
+        btn.disabled =
+          true;
+
+
+        btn.style.pointerEvents =
+          "none";
+
+
+        btn.classList
+          .remove("spam");
+
+
+        spamText.innerHTML = "";
+
+
+        status.innerHTML =
+          "⏳ MENUNGGU PERSETUJUAN ADMIN";
+
+
+        buzzerLocked =
+          true;
+
+
+        return;
+
+      }
+
+
+      // =========================================
+      // APPROVED
+      // =========================================
+
+      if(
+        data.status === "approved"
+      ){
+
+        loginScreen
+          .classList
+          .add("hidden");
+
+
+        btn.disabled =
+          false;
+
+
+        btn.style.pointerEvents =
+          "auto";
+
+
+        btn.classList
+          .remove("spam");
+
+
+        spamText.innerHTML = "";
+
+
+        buzzerLocked =
+          false;
+
+
+        status.innerHTML =
+          "🔥 SIAPKAN JARI!";
+
+      }
+
+    };
+
+
+  playerRef.on(
+    "value",
+    playerListener
+  );
+
+}
+
+
+pasangPlayerListener();
 
 
 
@@ -1001,8 +1331,27 @@ function(){
     status:
       "pending",
 
+    spam:
+      false,
+
     timestamp:
       Date.now()
+
+  })
+  .catch(error => {
+
+    console.log(error);
+
+
+    mulaiBtn.disabled =
+      false;
+
+    loginNama.disabled =
+      false;
+
+
+    loginStatus.innerHTML =
+      "❌ Gagal mengirim permintaan";
 
   });
 
@@ -1030,119 +1379,6 @@ loginNama.addEventListener(
 
 
 // =================================================
-// PLAYER STATUS REALTIME
-// =================================================
-
-db.ref(
-  "players/" + playerID
-)
-.on(
-  "value",
-  snap => {
-
-    const data =
-      snap.val();
-
-
-    if(!data){
-
-      return;
-
-    }
-
-
-    namaPlayer =
-      data.name ||
-      namaPlayer;
-
-
-    playerStatus =
-      data.status;
-
-
-    // =============================================
-    // PENDING
-    // =============================================
-
-    if(
-      data.status === "pending"
-    ){
-
-      loginScreen
-        .classList
-        .remove("hidden");
-
-
-      loginNama.value =
-        namaPlayer;
-
-
-      loginNama.disabled =
-        true;
-
-
-      mulaiBtn.disabled =
-        true;
-
-
-      loginStatus.innerHTML =
-        "⏳ MENUNGGU PERSETUJUAN ADMIN";
-
-
-      btn.disabled =
-        true;
-
-
-      btn.style.pointerEvents =
-        "none";
-
-
-      status.innerHTML =
-        "⏳ MENUNGGU PERSETUJUAN ADMIN";
-
-
-      buzzerLocked =
-        true;
-
-    }
-
-
-    // =============================================
-    // APPROVED
-    // =============================================
-
-    else if(
-      data.status === "approved"
-    ){
-
-      loginScreen
-        .classList
-        .add("hidden");
-
-
-      btn.disabled =
-        false;
-
-
-      btn.style.pointerEvents =
-        "auto";
-
-
-      buzzerLocked =
-        false;
-
-
-      status.innerHTML =
-        "🔥 SIAPKAN JARI!";
-
-    }
-
-  }
-);
-
-
-
-// =================================================
 // BUZZER
 // =================================================
 
@@ -1155,18 +1391,81 @@ btn.addEventListener(
 
 
     // =============================================
-    // ANTI SPAM
+    // PLAYER SPAM
+    // =============================================
+
+    if(playerSpam){
+
+      return;
+
+    }
+
+
+    // =============================================
+    // BELUM APPROVED
+    // =============================================
+
+    if(
+      playerStatus !== "approved"
+    ){
+
+      return;
+
+    }
+
+
+    // =============================================
+    // DOUBLE TAP
+    // =============================================
+
+    if(
+      lastClickTime > 0 &&
+
+      now - lastClickTime <=
+      SPAM_DELAY
+    ){
+
+      // =========================================
+      // LANGSUNG SIMPAN SPAM KE FIREBASE
+      // =========================================
+
+      playerSpam = true;
+
+      buzzerLocked = true;
+
+
+      btn.classList
+        .add("spam");
+
+
+      spamText.innerHTML =
+        "⚠ SPAM!";
+
+
+      status.innerHTML =
+        "⛔ MENUNGGU RESET GAME";
+
+
+      await db.ref(
+        "players/" +
+        playerID +
+        "/spam"
+      )
+      .set(true);
+
+
+      return;
+
+    }
+
+
+    // =============================================
+    // KLIK NORMAL
     // =============================================
 
     if(
       buzzerLocked ||
-
-      btn.disabled ||
-
-      playerStatus !== "approved" ||
-
-      now - lastClickTime <
-      CLICK_DELAY
+      btn.disabled
     ){
 
       return;
@@ -1182,13 +1481,14 @@ btn.addEventListener(
       true;
 
 
-    btn.disabled =
-      true;
+    /*
+      Jangan mematikan tombol secara
+      permanen di sini.
 
-
-    btn.style.pointerEvents =
-      "none";
-
+      Tombol tetap bisa menerima
+      tap kedua supaya sistem
+      bisa mendeteksi SPAM.
+    */
 
     try{
 
@@ -1246,14 +1546,6 @@ btn.addEventListener(
       buzzerLocked =
         false;
 
-
-      btn.disabled =
-        false;
-
-
-      btn.style.pointerEvents =
-        "auto";
-
     }
 
   }
@@ -1275,7 +1567,7 @@ db.ref("game")
 
 
     // =============================================
-    // RESET
+    // RESET GAME
     // =============================================
 
     if(!data){
@@ -1295,12 +1587,16 @@ db.ref("game")
       data.clicked === true
     ){
 
+      // Jangan mengunci pointer.
+      // Supaya tap kedua tetap bisa
+      // terdeteksi sebagai SPAM.
+
       btn.disabled =
-        true;
+        false;
 
 
       btn.style.pointerEvents =
-        "none";
+        "auto";
 
 
       const winner =
@@ -1378,6 +1674,37 @@ function resetGameUI(){
   }
 
 
+  // Kalau masih terkena SPAM,
+  // jangan aktifkan.
+
+  if(playerSpam){
+
+    btn.disabled =
+      false;
+
+    btn.style.pointerEvents =
+      "auto";
+
+    btn.classList
+      .add("spam");
+
+    spamText.innerHTML =
+      "⚠ SPAM!";
+
+
+    status.innerHTML =
+      "⛔ MENUNGGU RESET GAME";
+
+
+    buzzerLocked =
+      true;
+
+
+    return;
+
+  }
+
+
   buzzerLocked =
     false;
 
@@ -1392,6 +1719,14 @@ function resetGameUI(){
 
   btn.style.pointerEvents =
     "auto";
+
+
+  btn.classList
+    .remove("spam");
+
+
+  spamText.innerHTML =
+    "";
 
 
   btn.style.background =
