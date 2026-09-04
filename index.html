@@ -1,26 +1,46 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
 
 <meta charset="UTF-8">
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>RM KEMANG GAMES</title>
+
 <meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
+http-equiv="Cache-Control"
+content="no-cache, no-store, must-revalidate"
 >
 
-<title>RM KEMANG GAMES - Maintenance</title>
+<meta
+http-equiv="Pragma"
+content="no-cache"
+>
+
+<meta
+http-equiv="Expires"
+content="0"
+>
+
+
+<!-- FIREBASE -->
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+
+<!-- FONT -->
 
 <link
-  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-  rel="stylesheet"
+href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600&display=swap"
+rel="stylesheet"
 >
 
-<style>
 
-/* ================================================= */
-/* GLOBAL */
-/* ================================================= */
+<style>
 
 *{
   margin:0;
@@ -28,500 +48,720 @@
   box-sizing:border-box;
 }
 
-html,
-body{
-  width:100%;
-  height:100%;
-}
 
 body{
+
   font-family:'Poppins',sans-serif;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(0,255,255,.14),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at bottom right,
-      rgba(0,120,255,.16),
-      transparent 40%
-    ),
-    linear-gradient(
-      135deg,
-      #020617,
-      #07111f,
-      #020617
-    );
+
+  min-height:100vh;
+
+  overflow:hidden;
 
   color:white;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  background:
 
-  overflow:hidden;
+  linear-gradient(
+    rgba(5,5,15,0.72),
+    rgba(5,5,15,0.92)
+  ),
+
+  url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1600&auto=format&fit=crop');
+
+  background-size:cover;
+
+  background-position:center;
+
+  background-attachment:fixed;
+
 }
 
 
-/* ================================================= */
-/* BACKGROUND */
-/* ================================================= */
+/* ================= GLOW ================= */
 
-.background{
+body::before{
+
+  content:'';
+
   position:fixed;
-  inset:0;
-  pointer-events:none;
-}
 
-.background::before{
-  content:"";
-  position:absolute;
-  width:320px;
-  height:320px;
+  width:450px;
+
+  height:450px;
+
+  background:
+  rgba(0,255,255,0.16);
+
+  border-radius:50%;
+
+  filter:blur(120px);
 
   top:-120px;
-  left:-100px;
+
+  left:-120px;
+
+  pointer-events:none;
+
+}
+
+
+body::after{
+
+  content:'';
+
+  position:fixed;
+
+  width:450px;
+
+  height:450px;
+
+  background:
+  rgba(255,0,255,0.14);
 
   border-radius:50%;
 
-  background:rgba(0,255,255,.10);
+  filter:blur(120px);
 
-  filter:blur(70px);
+  bottom:-120px;
 
-  animation:float1 7s ease-in-out infinite;
-}
+  right:-120px;
 
-.background::after{
-  content:"";
-  position:absolute;
-  width:350px;
-  height:350px;
+  pointer-events:none;
 
-  right:-130px;
-  bottom:-140px;
-
-  border-radius:50%;
-
-  background:rgba(0,120,255,.12);
-
-  filter:blur(80px);
-
-  animation:float2 8s ease-in-out infinite;
-}
-
-@keyframes float1{
-  0%,100%{
-    transform:translate(0,0);
-  }
-
-  50%{
-    transform:translate(50px,40px);
-  }
-}
-
-@keyframes float2{
-  0%,100%{
-    transform:translate(0,0);
-  }
-
-  50%{
-    transform:translate(-40px,-50px);
-  }
 }
 
 
-/* ================================================= */
-/* CONTAINER */
-/* ================================================= */
+/* ================= HEADER ================= */
 
-.container{
-  position:relative;
+.topbar{
 
-  width:calc(100% - 32px);
-  max-width:520px;
+  width:100%;
 
-  padding:42px 28px 34px;
+  padding:20px;
 
   text-align:center;
 
-  border:1px solid rgba(255,255,255,.13);
+  font-family:'Orbitron',sans-serif;
 
-  border-radius:28px;
+  font-size:30px;
+
+  font-weight:900;
+
+  letter-spacing:3px;
 
   background:
-    linear-gradient(
-      145deg,
-      rgba(255,255,255,.09),
-      rgba(255,255,255,.035)
-    );
+  rgba(255,255,255,0.05);
 
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
+  backdrop-filter:blur(15px);
+
+  border-bottom:
+  1px solid rgba(255,255,255,0.08);
+
+  text-shadow:
+  0 0 20px cyan;
 
   box-shadow:
-    0 25px 70px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.10);
-
-  z-index:2;
-
-  animation:containerIn .8s ease;
-}
-
-@keyframes containerIn{
-
-  from{
-    opacity:0;
-    transform:translateY(25px) scale(.96);
-  }
-
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
+  0 0 25px rgba(0,255,255,0.15);
 
 }
 
 
-/* ================================================= */
-/* LOGO */
-/* ================================================= */
+/* ================= CONTAINER ================= */
 
-.logo{
-  width:88px;
-  height:88px;
+.container{
 
-  margin:0 auto 20px;
+  width:100%;
 
-  border-radius:50%;
+  height:calc(100vh - 80px);
 
   display:flex;
-  align-items:center;
+
+  flex-direction:column;
+
   justify-content:center;
 
-  font-size:42px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0,255,255,.18),
-      rgba(0,110,255,.15)
-    );
-
-  border:1px solid rgba(255,255,255,.18);
-
-  box-shadow:
-    0 0 35px rgba(0,220,255,.18),
-    inset 0 0 20px rgba(255,255,255,.04);
-
-  animation:pulse 2.5s ease-in-out infinite;
-}
-
-@keyframes pulse{
-
-  0%,100%{
-    transform:scale(1);
-    box-shadow:
-      0 0 30px rgba(0,220,255,.15),
-      inset 0 0 20px rgba(255,255,255,.04);
-  }
-
-  50%{
-    transform:scale(1.05);
-    box-shadow:
-      0 0 45px rgba(0,220,255,.30),
-      inset 0 0 25px rgba(255,255,255,.06);
-  }
-
-}
-
-
-/* ================================================= */
-/* TITLE */
-/* ================================================= */
-
-.brand{
-  font-size:13px;
-
-  font-weight:600;
-
-  letter-spacing:4px;
-
-  color:rgba(255,255,255,.65);
-
-  margin-bottom:8px;
-}
-
-h1{
-  font-size:34px;
-
-  font-weight:800;
-
-  letter-spacing:1px;
-
-  line-height:1.2;
-
-  background:
-    linear-gradient(
-      90deg,
-      #ffffff,
-      #7eeeff,
-      #ffffff
-    );
-
-  -webkit-background-clip:text;
-  background-clip:text;
-
-  color:transparent;
-
-  margin-bottom:12px;
-}
-
-.subtitle{
-  font-size:14px;
-
-  line-height:1.7;
-
-  color:rgba(255,255,255,.68);
-
-  max-width:400px;
-
-  margin:auto;
-}
-
-
-/* ================================================= */
-/* MAINTENANCE BOX */
-/* ================================================= */
-
-.maintenance-box{
-  margin-top:28px;
-
-  padding:22px 18px;
-
-  border-radius:20px;
-
-  background:
-    rgba(0,0,0,.22);
-
-  border:1px solid rgba(255,255,255,.10);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.05);
-}
-
-.status{
-  display:inline-flex;
-
   align-items:center;
-  justify-content:center;
 
-  gap:9px;
-
-  padding:8px 15px;
-
-  border-radius:999px;
-
-  font-size:11px;
-
-  font-weight:700;
-
-  letter-spacing:1px;
-
-  color:#8ff7ff;
-
-  background:rgba(0,220,255,.08);
-
-  border:1px solid rgba(0,220,255,.20);
-}
-
-.status-dot{
-  width:8px;
-  height:8px;
-
-  border-radius:50%;
-
-  background:#00eaff;
-
-  box-shadow:
-    0 0 12px #00eaff;
-
-  animation:blink 1.3s infinite;
-}
-
-@keyframes blink{
-
-  0%,100%{
-    opacity:1;
-  }
-
-  50%{
-    opacity:.25;
-  }
+  padding:20px;
 
 }
 
-.message{
-  margin-top:18px;
 
-  font-size:15px;
+/* ================= CARD ================= */
 
-  font-weight:500;
+.card{
 
-  color:white;
+  width:100%;
 
-  line-height:1.6;
-}
+  max-width:420px;
 
-.detail{
-  margin-top:8px;
-
-  font-size:12px;
-
-  line-height:1.7;
-
-  color:rgba(255,255,255,.52);
-}
-
-
-/* ================================================= */
-/* LOADING */
-/* ================================================= */
-
-.loading{
-  margin:25px auto 0;
-
-  width:170px;
-  height:4px;
+  position:relative;
 
   overflow:hidden;
 
-  border-radius:10px;
+  background:
+  rgba(15,15,35,0.65);
 
-  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(18px);
+
+  border:
+  1px solid rgba(255,255,255,0.08);
+
+  border-radius:35px;
+
+  padding:30px 20px;
+
+  text-align:center;
+
+  box-shadow:
+  0 0 40px rgba(0,0,0,0.45);
+
 }
 
-.loading-bar{
-  width:55%;
-  height:100%;
 
-  border-radius:10px;
+/* ================= INPUT ================= */
+
+input{
+
+  width:100%;
+
+  height:58px;
+
+  border:none;
+
+  outline:none;
+
+  border-radius:18px;
 
   background:
-    linear-gradient(
-      90deg,
-      transparent,
-      #00eaff,
-      transparent
-    );
+  rgba(255,255,255,0.08);
 
-  animation:loading 1.6s ease-in-out infinite;
+  color:white;
+
+  font-size:18px;
+
+  text-align:center;
+
+  border:
+  1px solid rgba(255,255,255,0.08);
+
+  transition:0.3s;
+
 }
 
-@keyframes loading{
 
-  0%{
-    transform:translateX(-180%);
-  }
+input:focus{
+
+  border:
+  1px solid cyan;
+
+  box-shadow:
+  0 0 20px cyan;
+
+}
+
+
+input::placeholder{
+
+  color:#ccc;
+
+}
+
+
+/* ================= BUZZER ================= */
+
+.buzzer-wrap{
+
+  display:flex;
+
+  justify-content:center;
+
+  margin-top:35px;
+
+}
+
+
+.buzzer{
+
+  width:230px;
+
+  height:230px;
+
+  border:none;
+
+  border-radius:50%;
+
+  cursor:pointer;
+
+  position:relative;
+
+  overflow:hidden;
+
+  font-family:'Orbitron',sans-serif;
+
+  font-size:34px;
+
+  font-weight:900;
+
+  color:white;
+
+  background:
+  linear-gradient(
+    145deg,
+    #00f0ff,
+    #0066ff
+  );
+
+  box-shadow:
+
+  0 0 30px #00f0ff,
+
+  0 0 70px rgba(0,240,255,0.45),
+
+  inset 0 -12px 20px rgba(0,0,0,0.35);
+
+  transition:0.2s;
+
+}
+
+
+.buzzer:hover{
+
+  transform:scale(1.03);
+
+}
+
+
+.buzzer:active{
+
+  transform:scale(0.95);
+
+}
+
+
+/* ================= SPAM ================= */
+
+.buzzer.spam{
+
+  background:
+  linear-gradient(
+    145deg,
+    #ff0000,
+    #8b0000
+  ) !important;
+
+  box-shadow:
+
+  0 0 30px #ff0000,
+
+  0 0 80px rgba(255,0,0,0.65),
+
+  inset 0 -12px 20px rgba(0,0,0,0.4) !important;
+
+  cursor:not-allowed;
+
+}
+
+
+#spamText{
+
+  margin-top:15px;
+
+  color:#ff3333;
+
+  font-family:'Orbitron',sans-serif;
+
+  font-size:18px;
+
+  font-weight:900;
+
+  text-shadow:
+  0 0 15px red;
+
+}
+
+
+/* ================= SHINE ================= */
+
+.buzzer::before{
+
+  content:'';
+
+  position:absolute;
+
+  width:100%;
+
+  height:100%;
+
+  background:
+
+  linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.35),
+    transparent
+  );
+
+  top:0;
+
+  left:-100%;
+
+  animation:shine 3s infinite;
+
+}
+
+
+@keyframes shine{
 
   100%{
-    transform:translateX(320%);
+    left:100%;
   }
 
 }
 
 
-/* ================================================= */
-/* FOOTER */
-/* ================================================= */
+/* ================= STATUS ================= */
 
-.footer{
+#status{
+
   margin-top:28px;
+
+  font-size:28px;
+
+  font-weight:700;
+
+  line-height:1.5;
+
+  text-shadow:
+  0 0 15px rgba(255,255,255,0.3);
+
+}
+
+
+/* ================= KLASMEN ================= */
+
+.klasemen{
+
+  position:fixed;
+
+  bottom:15px;
+
+  right:15px;
+
+  width:min(180px,45vw);
+
+  max-width:200px;
+
+  min-width:140px;
+
+  padding:12px;
+
+  border-radius:22px;
+
+  background:
+  rgba(15,15,35,0.78);
+
+  backdrop-filter:blur(18px);
+
+  border:
+  1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+  0 0 25px rgba(0,0,0,0.35);
+
+  z-index:9999;
+
+  cursor:grab;
+
+  touch-action:none;
+
+  user-select:none;
+
+  transition:
+  box-shadow 0.2s,
+  transform 0.15s;
+
+}
+
+
+.klasemen:active{
+
+  cursor:grabbing;
+
+  transform:scale(0.98);
+
+}
+
+
+.klasemen h2{
+
+  font-size:13px;
+
+  margin-bottom:12px;
+
+  text-align:center;
+
+  color:#00f0ff;
+
+  font-family:'Orbitron',sans-serif;
+
+  letter-spacing:1px;
+
+}
+
+
+.player{
+
+  margin-bottom:10px;
+
+}
+
+
+.player-name{
+
+  display:flex;
+
+  justify-content:space-between;
 
   font-size:10px;
 
-  color:rgba(255,255,255,.35);
+  margin-bottom:4px;
+
+  font-weight:600;
+
+}
+
+
+.bar{
+
+  width:100%;
+
+  height:10px;
+
+  background:
+  rgba(255,255,255,0.08);
+
+  border-radius:30px;
+
+  overflow:hidden;
+
+}
+
+
+.fill{
+
+  height:100%;
+
+  border-radius:25px;
+
+  background:
+
+  linear-gradient(
+    90deg,
+    #00f0ff,
+    #8a2eff,
+    #ff00d4
+  );
+
+  box-shadow:
+  0 0 10px #00f0ff;
+
+  transition:0.5s;
+
+}
+
+
+/* ================= FOOTER ================= */
+
+.footer{
+
+  margin-top:22px;
+
+  font-size:10px;
+
+  opacity:0.7;
 
   letter-spacing:1px;
-}
-
-
-/* ================================================= */
-/* MOBILE */
-/* ================================================= */
-
-@media(max-width:480px){
-
-  .container{
-    width:calc(100% - 24px);
-
-    padding:
-      34px 20px
-      28px;
-      
-    border-radius:24px;
-  }
-
-  .logo{
-    width:76px;
-    height:76px;
-
-    font-size:35px;
-
-    margin-bottom:17px;
-  }
-
-  .brand{
-    font-size:11px;
-    letter-spacing:3px;
-  }
-
-  h1{
-    font-size:28px;
-  }
-
-  .subtitle{
-    font-size:13px;
-  }
-
-  .maintenance-box{
-    margin-top:24px;
-    padding:19px 15px;
-  }
-
-  .message{
-    font-size:14px;
-  }
 
 }
 
 
-/* ================================================= */
-/* VERY SMALL SCREEN */
-/* ================================================= */
+/* ================= LOGIN ================= */
 
-@media(max-height:650px){
+.login-screen{
 
-  .container{
-    padding-top:25px;
-    padding-bottom:22px;
+  position:fixed;
+
+  inset:0;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  background:
+  rgba(5,5,15,.92);
+
+  backdrop-filter:blur(12px);
+
+  z-index:99999;
+
+}
+
+
+.login-box{
+
+  width:90%;
+
+  max-width:360px;
+
+  padding:30px;
+
+  border-radius:25px;
+
+  background:
+  rgba(20,20,40,.75);
+
+  border:
+  1px solid rgba(255,255,255,.08);
+
+  text-align:center;
+
+}
+
+
+.login-box h1{
+
+  font-family:'Orbitron',sans-serif;
+
+  margin-bottom:10px;
+
+  color:#00f0ff;
+
+}
+
+
+.login-box p{
+
+  margin-bottom:20px;
+
+  opacity:.8;
+
+}
+
+
+.login-box button{
+
+  width:100%;
+
+  height:55px;
+
+  margin-top:15px;
+
+  border:none;
+
+  border-radius:15px;
+
+  font-size:18px;
+
+  font-weight:bold;
+
+  background:
+  linear-gradient(
+    145deg,
+    #00f0ff,
+    #0066ff
+  );
+
+  color:white;
+
+  cursor:pointer;
+
+}
+
+
+.login-box button:disabled{
+
+  opacity:.5;
+
+}
+
+
+/* ================= LOGIN STATUS ================= */
+
+#loginStatus{
+
+  margin-top:18px;
+
+  font-size:14px;
+
+  line-height:1.6;
+
+  min-height:25px;
+
+  color:#00f0ff;
+
+  font-weight:600;
+
+}
+
+
+/* ================= HIDDEN ================= */
+
+.hidden{
+
+  display:none !important;
+
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:600px){
+
+  .topbar{
+
+    font-size:26px;
+
   }
 
-  .logo{
-    width:65px;
-    height:65px;
+
+  .buzzer{
+
+    width:210px;
+
+    height:210px;
 
     font-size:30px;
 
-    margin-bottom:12px;
   }
 
-  .maintenance-box{
-    margin-top:18px;
+
+  #status{
+
+    font-size:24px;
+
   }
 
-  .footer{
-    margin-top:18px;
+
+  .klasemen{
+
+    width:160px;
+
+    bottom:10px;
+
+    right:10px;
+
+    padding:10px;
+
+  }
+
+
+  .bar{
+
+    height:8px;
+
   }
 
 }
@@ -533,73 +773,1388 @@ h1{
 
 <body>
 
-<div class="background"></div>
 
+<!-- LOGIN -->
 
-<div class="container">
+<div
+id="loginScreen"
+class="login-screen"
+>
 
-  <div class="logo">
-    🎮
-  </div>
+  <div class="login-box">
 
-  <div class="brand">
-    RM KEMANG
-  </div>
+    <h1>
+      🎮 RM KEMANG GAMES
+    </h1>
 
-  <h1>
-    GAMES
-  </h1>
+    <p>
+      Masukkan nama untuk mulai bermain
+    </p>
 
-  <div class="subtitle">
-    Halaman permainan sedang dalam proses
-    pemeliharaan sementara.
-  </div>
+    <input
+      type="text"
+      id="loginNama"
+      placeholder="Nama Kamu"
+      autocomplete="off"
+    >
 
+    <button
+      id="mulaiBtn"
+    >
+      MULAI GAME
+    </button>
 
-  <div class="maintenance-box">
-
-    <div class="status">
-
-      <span class="status-dot"></span>
-
-      MAINTENANCE
-
-    </div>
-
-
-    <div class="message">
-
-      🔧 SISTEM SEDANG DIPERBAIKI
-
-    </div>
-
-
-    <div class="detail">
-
-      Mohon tunggu beberapa saat.<br>
-      Silakan kembali lagi setelah sistem
-      kembali normal.
-
-    </div>
-
-
-    <div class="loading">
-
-      <div class="loading-bar"></div>
-
-    </div>
-
-  </div>
-
-
-  <div class="footer">
-
-    RM KEMANG GAMES • SYSTEM MAINTENANCE
+    <div
+      id="loginStatus"
+    ></div>
 
   </div>
 
 </div>
 
 
+<!-- HEADER -->
+
+<div class="topbar">
+
+RM KEMANG GAMES
+
+</div>
+
+
+<!-- MINI KLASMEN -->
+
+<div class="klasemen">
+
+  <h2>
+    🏆 TOP PLAYER
+  </h2>
+
+  <div id="ranking"></div>
+
+</div>
+
+
+<!-- GAME -->
+
+<div class="container">
+
+  <div class="card">
+
+    <div class="buzzer-wrap">
+
+      <button
+        id="btn"
+        class="buzzer"
+      >
+
+        TAP!
+
+      </button>
+
+    </div>
+
+
+    <div id="spamText"></div>
+
+
+    <h2 id="status">
+
+      🔥 SIAPKAN JARI!
+
+    </h2>
+
+
+    <div class="footer">
+
+      OUTING RANCH MARKET 2026
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+
+// =================================================
+// FIREBASE
+// =================================================
+
+const firebaseConfig = {
+
+  apiKey:
+  "AIzaSyD36RSQ5epRBSbeI9JnEkI2UevOg921xrI",
+
+  authDomain:
+  "game-aldi.firebaseapp.com",
+
+  databaseURL:
+  "https://game-aldi-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+  projectId:
+  "game-aldi",
+
+  storageBucket:
+  "game-aldi.firebasestorage.app",
+
+  messagingSenderId:
+  "184345142676",
+
+  appId:
+  "1:184345142676:web:f19d19999c897d0ca95b81"
+
+};
+
+
+firebase.initializeApp(firebaseConfig);
+
+
+const db =
+firebase.database();
+
+
+// =================================================
+// ELEMENT
+// =================================================
+
+const btn =
+document.getElementById("btn");
+
+const status =
+document.getElementById("status");
+
+const loginScreen =
+document.getElementById("loginScreen");
+
+const loginNama =
+document.getElementById("loginNama");
+
+const mulaiBtn =
+document.getElementById("mulaiBtn");
+
+const loginStatus =
+document.getElementById("loginStatus");
+
+const spamText =
+document.getElementById("spamText");
+
+
+// =================================================
+// PLAYER ID
+// =================================================
+
+function buatPlayerID(){
+
+  return (
+    "player_" +
+    Date.now() +
+    "_" +
+    Math.random()
+      .toString(36)
+      .substring(2,8)
+  );
+
+}
+
+
+let playerID =
+localStorage.getItem(
+  "rmKemangPlayerID"
+);
+
+
+if(!playerID){
+
+  playerID =
+    buatPlayerID();
+
+
+  localStorage.setItem(
+    "rmKemangPlayerID",
+    playerID
+  );
+
+}
+
+
+let namaPlayer = "";
+
+let playerStatus = "";
+
+let playerSpam = false;
+
+let buzzerLocked = false;
+
+let lastClickTime = 0;
+
+
+// =================================================
+// ANTI SPAM
+// =================================================
+
+const SPAM_DELAY = 2000;
+
+const CLICK_DELAY = 700;
+
+
+// =================================================
+// PLAYER LISTENER
+// =================================================
+
+let playerRef = null;
+let playerListener = null;
+
+
+function pasangPlayerListener(){
+
+  if(playerRef && playerListener){
+
+    playerRef.off(
+      "value",
+      playerListener
+    );
+
+  }
+
+
+  playerRef =
+    db.ref(
+      "players/" +
+      playerID
+    );
+
+
+  playerListener =
+    snap => {
+
+      const data =
+        snap.val();
+
+
+      // =========================================
+      // DATA PLAYER TIDAK ADA
+      // RESET PEMAIN
+      // =========================================
+
+      if(!data){
+
+        namaPlayer = "";
+
+        playerStatus = "";
+
+        playerSpam = false;
+
+        buzzerLocked = true;
+
+        lastClickTime = 0;
+
+
+        loginScreen
+          .classList
+          .remove("hidden");
+
+
+        loginNama.value = "";
+
+        loginNama.disabled = false;
+
+
+        mulaiBtn.disabled = false;
+
+
+        loginStatus.innerHTML =
+          "👤 MASUKKAN NAMA UNTUK BERMAIN";
+
+
+        btn.disabled = true;
+
+        btn.style.pointerEvents =
+          "none";
+
+
+        btn.classList
+          .remove("spam");
+
+
+        spamText.innerHTML = "";
+
+
+        btn.style.background =
+          "linear-gradient(145deg,#00f0ff,#0066ff)";
+
+
+        status.innerHTML =
+          "👤 MASUKKAN NAMA";
+
+
+        return;
+
+      }
+
+
+      // =========================================
+      // DATA PLAYER ADA
+      // =========================================
+
+      namaPlayer =
+        data.name ||
+        namaPlayer;
+
+
+      playerStatus =
+        data.status;
+
+
+      playerSpam =
+        data.spam === true;
+
+
+      // =========================================
+      // SPAM
+      // =========================================
+
+      if(playerSpam){
+
+        buzzerLocked = true;
+
+
+        btn.disabled = false;
+
+        btn.style.pointerEvents =
+          "auto";
+
+
+        btn.classList
+          .add("spam");
+
+
+        spamText.innerHTML =
+          "⚠ SPAM!";
+
+
+        status.innerHTML =
+          "⛔ MENUNGGU RESET GAME";
+
+
+        return;
+
+      }
+
+
+      // =========================================
+      // PENDING
+      // =========================================
+
+      if(
+        data.status === "pending"
+      ){
+
+        loginScreen
+          .classList
+          .remove("hidden");
+
+
+        loginNama.value =
+          namaPlayer;
+
+
+        loginNama.disabled =
+          true;
+
+
+        mulaiBtn.disabled =
+          true;
+
+
+        loginStatus.innerHTML =
+          "⏳ MENUNGGU PERSETUJUAN ADMIN";
+
+
+        btn.disabled =
+          true;
+
+
+        btn.style.pointerEvents =
+          "none";
+
+
+        btn.classList
+          .remove("spam");
+
+
+        spamText.innerHTML =
+          "";
+
+
+        status.innerHTML =
+          "⏳ MENUNGGU PERSETUJUAN ADMIN";
+
+
+        buzzerLocked =
+          true;
+
+
+        return;
+
+      }
+
+
+      // =========================================
+      // APPROVED
+      // =========================================
+
+      if(
+        data.status === "approved"
+      ){
+
+        loginScreen
+          .classList
+          .add("hidden");
+
+
+        btn.disabled =
+          false;
+
+
+        btn.style.pointerEvents =
+          "auto";
+
+
+        btn.classList
+          .remove("spam");
+
+
+        spamText.innerHTML =
+          "";
+
+
+        buzzerLocked =
+          false;
+
+
+        if(
+          !window.currentGameData ||
+          window.currentGameData.clicked !== true
+        ){
+
+          status.innerHTML =
+            "🔥 SIAPKAN JARI!";
+
+        }
+
+      }
+
+    };
+
+
+  playerRef.on(
+    "value",
+    playerListener
+  );
+
+}
+
+
+pasangPlayerListener();
+
+
+// =================================================
+// PLAYER LOGIN
+// =================================================
+
+mulaiBtn.onclick =
+function(){
+
+  const nama =
+    loginNama.value.trim();
+
+
+  if(!nama){
+
+    loginStatus.innerHTML =
+      "⚠️ Masukkan nama terlebih dahulu!";
+
+    return;
+
+  }
+
+
+  namaPlayer =
+    nama;
+
+
+  mulaiBtn.disabled =
+    true;
+
+  loginNama.disabled =
+    true;
+
+
+  loginStatus.innerHTML =
+    "⏳ Mengirim permintaan ke admin...";
+
+
+  db.ref(
+    "players/" + playerID
+  )
+  .set({
+
+    name:
+      namaPlayer,
+
+    status:
+      "pending",
+
+    spam:
+      false,
+
+    timestamp:
+      Date.now()
+
+  })
+  .catch(error => {
+
+    console.log(error);
+
+
+    mulaiBtn.disabled =
+      false;
+
+    loginNama.disabled =
+      false;
+
+
+    loginStatus.innerHTML =
+      "❌ Gagal mengirim permintaan";
+
+  });
+
+};
+
+
+// =================================================
+// ENTER
+// =================================================
+
+loginNama.addEventListener(
+  "keypress",
+  function(e){
+
+    if(e.key === "Enter"){
+
+      mulaiBtn.click();
+
+    }
+
+  }
+);
+
+
+// =================================================
+// BUZZER
+// =================================================
+
+btn.addEventListener(
+  "click",
+  async function(){
+
+    const now =
+      Date.now();
+
+
+    // =============================================
+    // SPAM SUDAH AKTIF
+    // =============================================
+
+    if(playerSpam){
+
+      return;
+
+    }
+
+
+    // =============================================
+    // BELUM APPROVED
+    // =============================================
+
+    if(
+      playerStatus !== "approved"
+    ){
+
+      return;
+
+    }
+
+
+    // =============================================
+    // DOUBLE TAP ≤ 2 DETIK
+    // =============================================
+
+    if(
+      lastClickTime > 0 &&
+      now - lastClickTime <= SPAM_DELAY
+    ){
+
+      playerSpam = true;
+
+      buzzerLocked = true;
+
+
+      btn.disabled =
+        false;
+
+
+      btn.style.pointerEvents =
+        "auto";
+
+
+      btn.classList
+        .add("spam");
+
+
+      spamText.innerHTML =
+        "⚠ SPAM!";
+
+
+      status.innerHTML =
+        "⛔ MENUNGGU RESET GAME";
+
+
+      try{
+
+        await db.ref(
+          "players/" +
+          playerID +
+          "/spam"
+        )
+        .set(true);
+
+      }
+
+      catch(error){
+
+        console.log(error);
+
+      }
+
+
+      return;
+
+    }
+
+
+    // =============================================
+    // KLIK NORMAL
+    // =============================================
+
+    if(
+      buzzerLocked
+    ){
+
+      return;
+
+    }
+
+
+    if(
+      btn.disabled
+    ){
+
+      return;
+
+    }
+
+
+    lastClickTime =
+      now;
+
+
+    buzzerLocked =
+      true;
+
+
+    /*
+      Tombol sengaja tetap menerima
+      tap berikutnya agar double tap
+      bisa dideteksi sebagai SPAM.
+    */
+
+    btn.disabled =
+      false;
+
+    btn.style.pointerEvents =
+      "auto";
+
+
+    try{
+
+      await db.ref("game")
+      .transaction(
+        current => {
+
+          if(
+
+            current === null ||
+
+            current.clicked !== true
+
+          ){
+
+            return {
+
+              clicked:
+                true,
+
+              player:
+                namaPlayer,
+
+              playerID:
+                playerID,
+
+              timestamp:
+                Date.now()
+
+            };
+
+          }
+
+
+          return;
+
+        }
+      );
+
+    }
+
+    catch(error){
+
+      console.log(error);
+
+
+      buzzerLocked =
+        false;
+
+    }
+
+  }
+);
+
+
+// =================================================
+// GAME REALTIME
+// =================================================
+
+window.currentGameData = null;
+
+
+db.ref("game")
+.on(
+  "value",
+  snap => {
+
+    const data =
+      snap.val();
+
+
+    window.currentGameData =
+      data;
+
+
+    // =============================================
+    // RESET GAME
+    // =============================================
+
+    if(!data){
+
+      resetGameUI();
+
+      return;
+
+    }
+
+
+    // =============================================
+    // JIKA SPAM
+    // =============================================
+
+    if(playerSpam){
+
+      btn.disabled =
+        false;
+
+
+      btn.style.pointerEvents =
+        "auto";
+
+
+      btn.classList
+        .add("spam");
+
+
+      spamText.innerHTML =
+        "⚠ SPAM!";
+
+
+      status.innerHTML =
+        "⛔ MENUNGGU RESET GAME";
+
+
+      buzzerLocked =
+        true;
+
+
+      return;
+
+    }
+
+
+    // =============================================
+    // GAME SUDAH PUNYA PEMENANG
+    // =============================================
+
+    if(
+      data.clicked === true
+    ){
+
+      /*
+        Jangan disable tombol total.
+
+        Kita masih membutuhkan tombol
+        untuk mendeteksi double tap.
+      */
+
+      btn.disabled =
+        false;
+
+
+      btn.style.pointerEvents =
+        "auto";
+
+
+      buzzerLocked =
+        false;
+
+
+      const winner =
+        data.player;
+
+
+      // =========================================
+      // SAYA PEMENANG
+      // =========================================
+
+      if(
+        data.playerID === playerID
+      ){
+
+        status.innerHTML =
+          "KAMU BOLEH JAWAB!✅";
+
+
+        btn.classList
+          .remove("spam");
+
+
+        spamText.innerHTML =
+          "";
+
+
+        btn.style.background =
+          "linear-gradient(145deg,#00ff99,#00c3ff)";
+
+
+        if(
+          navigator.vibrate
+        ){
+
+          navigator.vibrate([
+            200,
+            100,
+            200
+          ]);
+
+        }
+
+      }
+
+
+      // =========================================
+      // PEMAIN LAIN
+      // =========================================
+
+      else{
+
+        status.innerHTML =
+          `KAMU KALAH CEPAT DARI ❌<br>${escapeHTML(winner)}`;
+
+
+        btn.classList
+          .remove("spam");
+
+
+        spamText.innerHTML =
+          "";
+
+
+        btn.style.background =
+          "linear-gradient(145deg,#ff004c,#ff7a00)";
+
+      }
+
+    }
+
+  }
+);
+
+
+// =================================================
+// RESET GAME UI
+// =================================================
+
+function resetGameUI(){
+
+  /*
+    Kalau belum approved,
+    jangan aktifkan buzzer.
+  */
+
+  if(
+    playerStatus !== "approved"
+  ){
+
+    return;
+
+  }
+
+
+  /*
+    Kalau masih SPAM,
+    tetap terkunci.
+  */
+
+  if(playerSpam){
+
+    btn.disabled =
+      false;
+
+
+    btn.style.pointerEvents =
+      "auto";
+
+
+    btn.classList
+      .add("spam");
+
+
+    spamText.innerHTML =
+      "⚠ SPAM!";
+
+
+    status.innerHTML =
+      "⛔ MENUNGGU RESET GAME";
+
+
+    buzzerLocked =
+      true;
+
+
+    return;
+
+  }
+
+
+  buzzerLocked =
+    false;
+
+
+  lastClickTime =
+    0;
+
+
+  btn.disabled =
+    false;
+
+
+  btn.style.pointerEvents =
+    "auto";
+
+
+  btn.classList
+    .remove("spam");
+
+
+  spamText.innerHTML =
+    "";
+
+
+  btn.style.background =
+    "linear-gradient(145deg,#00f0ff,#0066ff)";
+
+
+  status.innerHTML =
+    "🔥 SIAPKAN JARI!";
+
+}
+
+
+// =================================================
+// RANKING
+// =================================================
+
+db.ref("ranking")
+.on(
+  "value",
+  snap => {
+
+    const data =
+      snap.val() || {};
+
+
+    let arr = [];
+
+
+    for(
+      let nama in data
+    ){
+
+      arr.push({
+
+        nama:
+          data[nama].name ||
+          nama,
+
+        score:
+          data[nama].score ||
+          0
+
+      });
+
+    }
+
+
+    arr.sort(
+      (a,b) =>
+        b.score - a.score
+    );
+
+
+    let max =
+      arr[0]
+        ? arr[0].score
+        : 1;
+
+
+    let html = "";
+
+
+    arr.forEach(
+      (item,index) => {
+
+        let persen =
+          (item.score / max) *
+          100;
+
+
+        html += `
+
+        <div class="player">
+
+          <div class="player-name">
+
+            <span>
+              ${escapeHTML(item.nama)}
+            </span>
+
+            <span>
+              ${item.score}
+            </span>
+
+          </div>
+
+          <div class="bar">
+
+            <div
+              class="fill"
+              style="width:${persen}%"
+            ></div>
+
+          </div>
+
+        </div>
+
+        `;
+
+      }
+    );
+
+
+    document
+      .getElementById("ranking")
+      .innerHTML =
+        html;
+
+  }
+);
+
+
+// =================================================
+// ESCAPE HTML
+// =================================================
+
+function escapeHTML(text){
+
+  const div =
+    document.createElement("div");
+
+
+  div.textContent =
+    text || "";
+
+
+  return div.innerHTML;
+
+}
+
+
+// =================================================
+// CACHE
+// =================================================
+
+window.onpageshow =
+function(event){
+
+  if(event.persisted){
+
+    window.location.reload();
+
+  }
+
+};
+
+
+// =================================================
+// DRAG KLASMEN
+// =================================================
+
+const klasemen =
+document.querySelector(
+  ".klasemen"
+);
+
+
+let isDragging =
+  false;
+
+let offsetX =
+  0;
+
+let offsetY =
+  0;
+
+
+let startX =
+  window.innerWidth -
+  210;
+
+
+let startY =
+  window.innerHeight -
+  230;
+
+
+klasemen.style.left =
+  startX + "px";
+
+
+klasemen.style.top =
+  startY + "px";
+
+
+klasemen.style.right =
+  "auto";
+
+
+klasemen.style.bottom =
+  "auto";
+
+
+function dragStart(x,y){
+
+  isDragging =
+    true;
+
+
+  const rect =
+    klasemen.getBoundingClientRect();
+
+
+  offsetX =
+    x - rect.left;
+
+
+  offsetY =
+    y - rect.top;
+
+}
+
+
+function dragMove(x,y){
+
+  if(!isDragging)
+    return;
+
+
+  let newX =
+    x - offsetX;
+
+
+  let newY =
+    y - offsetY;
+
+
+  const maxX =
+    window.innerWidth -
+    klasemen.offsetWidth;
+
+
+  const maxY =
+    window.innerHeight -
+    klasemen.offsetHeight;
+
+
+  newX =
+    Math.max(
+      0,
+      Math.min(
+        newX,
+        maxX
+      )
+    );
+
+
+  newY =
+    Math.max(
+      0,
+      Math.min(
+        newY,
+        maxY
+      )
+    );
+
+
+  klasemen.style.left =
+    newX + "px";
+
+
+  klasemen.style.top =
+    newY + "px";
+
+}
+
+
+function dragEnd(){
+
+  isDragging =
+    false;
+
+}
+
+
+// =================================================
+// TOUCH
+// =================================================
+
+klasemen.addEventListener(
+  "touchstart",
+  e => {
+
+    const t =
+      e.touches[0];
+
+
+    dragStart(
+      t.clientX,
+      t.clientY
+    );
+
+  }
+);
+
+
+document.addEventListener(
+  "touchmove",
+  e => {
+
+    if(!isDragging)
+      return;
+
+
+    const t =
+      e.touches[0];
+
+
+    dragMove(
+      t.clientX,
+      t.clientY
+    );
+
+
+    e.preventDefault();
+
+  },
+  {
+    passive:false
+  }
+);
+
+
+document.addEventListener(
+  "touchend",
+  dragEnd
+);
+
+
+// =================================================
+// MOUSE
+// =================================================
+
+klasemen.addEventListener(
+  "mousedown",
+  e => {
+
+    dragStart(
+      e.clientX,
+      e.clientY
+    );
+
+  }
+);
+
+
+document.addEventListener(
+  "mousemove",
+  e => {
+
+    dragMove(
+      e.clientX,
+      e.clientY
+    );
+
+  }
+);
+
+
+document.addEventListener(
+  "mouseup",
+  dragEnd
+);
+
+
+</script>
+
 </body>
+
 </html>
