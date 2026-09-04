@@ -1005,7 +1005,6 @@ const CLICK_DELAY = 700;
 // =================================================
 
 let playerRef = null;
-
 let playerListener = null;
 
 
@@ -1036,7 +1035,8 @@ function pasangPlayerListener(){
 
 
       // =========================================
-      // PLAYER DIHAPUS
+      // DATA PLAYER TIDAK ADA
+      // RESET PEMAIN
       // =========================================
 
       if(!data){
@@ -1061,6 +1061,7 @@ function pasangPlayerListener(){
 
         loginNama.disabled = false;
 
+
         mulaiBtn.disabled = false;
 
 
@@ -1081,26 +1082,22 @@ function pasangPlayerListener(){
         spamText.innerHTML = "";
 
 
+        btn.style.background =
+          "linear-gradient(145deg,#00f0ff,#0066ff)";
+
+
         status.innerHTML =
           "👤 MASUKKAN NAMA";
 
-
-        playerID =
-          buatPlayerID();
-
-
-        localStorage.setItem(
-          "rmKemangPlayerID",
-          playerID
-        );
-
-
-        pasangPlayerListener();
 
         return;
 
       }
 
+
+      // =========================================
+      // DATA PLAYER ADA
+      // =========================================
 
       namaPlayer =
         data.name ||
@@ -1188,7 +1185,8 @@ function pasangPlayerListener(){
           .remove("spam");
 
 
-        spamText.innerHTML = "";
+        spamText.innerHTML =
+          "";
 
 
         status.innerHTML =
@@ -1229,26 +1227,17 @@ function pasangPlayerListener(){
           .remove("spam");
 
 
-        spamText.innerHTML = "";
+        spamText.innerHTML =
+          "";
 
 
         buzzerLocked =
           false;
 
 
-        /*
-          Kalau game sedang aktif,
-          listener game akan menampilkan
-          hasil menang/kalah.
-        */
-
-        const currentGame =
-          window.currentGameData;
-
-
         if(
-          !currentGame ||
-          currentGame.clicked !== true
+          !window.currentGameData ||
+          window.currentGameData.clicked !== true
         ){
 
           status.innerHTML =
