@@ -979,7 +979,7 @@ RM KEMANG GAMES
 const firebaseConfig = {
 
   apiKey:
-  "AIzaSyD36RSQ5epRBSbeI9JnEkI2UevOg921xrI",
+  "AIzaSyD36RSQ5epBRSbeI9JnEkI2UevOg921xrI",
 
   authDomain:
   "game-aldi.firebaseapp.com",
@@ -1144,6 +1144,9 @@ function pasangPlayerListener(){
         lastClickTime = 0;
 
 
+        window.currentGameData = null;
+
+
         loginScreen
           .classList
           .remove("hidden");
@@ -1166,15 +1169,12 @@ function pasangPlayerListener(){
           "none";
 
 
-        btn.classList
-          .remove("spam");
+        /*
+          FIX:
+          Bersihkan SEMUA state visual buzzer.
+        */
 
-
-        spamText.innerHTML = "";
-
-
-        btn.style.background =
-          "linear-gradient(145deg,#00f0ff,#0066ff)";
+        resetBuzzerColor();
 
 
         status.innerHTML =
@@ -1273,12 +1273,13 @@ function pasangPlayerListener(){
           "none";
 
 
-        btn.classList
-          .remove("spam");
+        /*
+          FIX:
+          Player tidak lagi dalam keadaan menang,
+          kalah, atau spam.
+        */
 
-
-        spamText.innerHTML =
-          "";
+        resetBuzzerColor();
 
 
         status.innerHTML =
@@ -1323,14 +1324,14 @@ function pasangPlayerListener(){
           "";
 
 
-        buzzerLocked =
-          false;
-
-
         /*
-          Kalau sedang ada game yang masih
-          memiliki pemenang, jangan mengubah
-          tampilan hasil yang sedang tampil.
+          FIX:
+          Kalau tidak ada game aktif,
+          selalu kembalikan buzzer ke kondisi
+          awal.
+
+          Ini mencegah warna hijau/merah
+          tertinggal setelah reset.
         */
 
         if(
@@ -1338,8 +1339,23 @@ function pasangPlayerListener(){
           window.currentGameData.clicked !== true
         ){
 
+          resetBuzzerColor();
+
+          buzzerLocked =
+            false;
+
+          lastClickTime =
+            0;
+
+
           status.innerHTML =
             "🔥 SIAPKAN JARI!";
+
+        }
+        else{
+
+          buzzerLocked =
+            false;
 
         }
 
@@ -1729,6 +1745,19 @@ db.ref("game")
 
     if(!data){
 
+      /*
+        FIX UTAMA:
+
+        Set currentGameData ke null terlebih dahulu,
+        lalu bersihkan warna buzzer.
+
+        Jadi warna hijau/merah/SPAM tidak bisa
+        tertinggal setelah game kosong.
+      */
+
+      window.currentGameData = null;
+
+
       resetGameUI();
 
       return;
@@ -1808,9 +1837,11 @@ db.ref("game")
         data.playerID === playerID
       ){
 
-        status.innerHTML =
-          "KAMU BOLEH JAWAB!✅";
-
+        /*
+          FIX:
+          Pastikan class SPAM hilang dan
+          background pemenang diterapkan ulang.
+        */
 
         btn.classList
           .remove("spam");
@@ -1822,6 +1853,10 @@ db.ref("game")
 
         btn.style.background =
           "linear-gradient(145deg,#00ff99,#00c3ff)";
+
+
+        status.innerHTML =
+          "KAMU BOLEH JAWAB!✅";
 
 
         if(
@@ -1845,9 +1880,11 @@ db.ref("game")
 
       else{
 
-        status.innerHTML =
-          `KAMU KALAH CEPAT DARI ❌<br>${escapeHTML(winner)}`;
-
+        /*
+          FIX:
+          Pastikan class SPAM hilang dan
+          background kalah diterapkan ulang.
+        */
 
         btn.classList
           .remove("spam");
@@ -1860,6 +1897,10 @@ db.ref("game")
         btn.style.background =
           "linear-gradient(145deg,#ff004c,#ff7a00)";
 
+
+        status.innerHTML =
+          `KAMU KALAH CEPAT DARI ❌<br>${escapeHTML(winner)}`;
+
       }
 
     }
@@ -1869,10 +1910,61 @@ db.ref("game")
 
 
 // =================================================
+// RESET BUZZER COLOR
+// =================================================
+
+function resetBuzzerColor(){
+
+  /*
+    Hapus class SPAM.
+  */
+
+  btn.classList.remove("spam");
+
+
+  /*
+    Bersihkan pesan SPAM.
+  */
+
+  spamText.innerHTML = "";
+
+
+  /*
+    Paksa kembali background default.
+    !important tidak diperlukan karena
+    style inline memiliki prioritas lebih tinggi
+    daripada CSS class.
+  */
+
+  btn.style.background =
+    "linear-gradient(145deg,#00f0ff,#0066ff)";
+
+
+}
+
+
+// =================================================
 // RESET GAME UI
 // =================================================
 
 function resetGameUI(){
+
+  /*
+    =================================================
+    FIX UTAMA
+    =================================================
+
+    Apapun warna sebelumnya:
+
+    HIJAU = PEMENANG
+    MERAH = KALAH
+    MERAH GELAP = SPAM
+
+    semuanya dibersihkan terlebih dahulu.
+  */
+
+  resetBuzzerColor();
+
 
   /*
     Kalau belum approved,
@@ -1883,6 +1975,18 @@ function resetGameUI(){
     playerStatus !== "approved"
   ){
 
+    buzzerLocked =
+      true;
+
+
+    btn.disabled =
+      true;
+
+
+    btn.style.pointerEvents =
+      "none";
+
+
     return;
 
   }
@@ -1892,8 +1996,13 @@ function resetGameUI(){
     Kalau masih SPAM,
     tetap terkunci.
 
-    Jadi membuka / menghapus game tidak
-    otomatis membuka pemain SPAM.
+    Ini tetap dipertahankan agar:
+
+    - Reset GAME tidak otomatis membuka SPAM
+    - Admin tetap harus BUKA SPAM
+
+    Tetapi warna akan kembali merah
+    hanya jika status SPAM memang masih true.
   */
 
   if(playerSpam){
@@ -1927,6 +2036,10 @@ function resetGameUI(){
   }
 
 
+  /*
+    KONDISI NORMAL
+  */
+
   buzzerLocked =
     false;
 
@@ -1943,6 +2056,10 @@ function resetGameUI(){
     "auto";
 
 
+  /*
+    Pastikan sekali lagi tidak ada class SPAM.
+  */
+
   btn.classList
     .remove("spam");
 
@@ -1950,6 +2067,10 @@ function resetGameUI(){
   spamText.innerHTML =
     "";
 
+
+  /*
+    Pastikan background benar-benar kembali biru.
+  */
 
   btn.style.background =
     "linear-gradient(145deg,#00f0ff,#0066ff)";
