@@ -5,7 +5,10 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
 
 <title>RM KEMANG GAMES</title>
 
@@ -134,6 +137,7 @@ body::after{
 /* ================= HEADER ================= */
 
 .topbar{
+
   width:100%;
 
   padding:30px 20px 20px;
@@ -161,6 +165,7 @@ body::after{
 
   box-shadow:
   0 0 25px rgba(0,255,255,0.15);
+
 }
 
 
@@ -181,7 +186,7 @@ body::after{
   align-items:center;
 
   padding:20px;
-  
+
 }
 
 
@@ -201,7 +206,7 @@ body::after{
   rgba(15,15,35,0.28);
 
   backdrop-filter:blur(18px);
-  
+
   -webkit-backdrop-filter:blur(18px);
 
   border:
@@ -215,7 +220,7 @@ body::after{
 
   box-shadow:
   0 0 40px rgba(0,0,0,0.45);
-  
+
   transform:translateY(-35px);
 
 }
@@ -510,6 +515,8 @@ input::placeholder{
   letter-spacing:1px;
 
 }
+
+
 /* ================= RANKING HEADER ================= */
 
 .ranking-header{
@@ -920,6 +927,7 @@ RM KEMANG GAMES
 
 </div>
 
+
 <!-- GAME -->
 
 <div class="container">
@@ -1121,7 +1129,6 @@ function pasangPlayerListener(){
 
       // =========================================
       // DATA PLAYER TIDAK ADA
-      // RESET PEMAIN
       // =========================================
 
       if(!data){
@@ -1145,7 +1152,6 @@ function pasangPlayerListener(){
         loginNama.value = "";
 
         loginNama.disabled = false;
-
 
         mulaiBtn.disabled = false;
 
@@ -1190,7 +1196,8 @@ function pasangPlayerListener(){
 
 
       playerStatus =
-        data.status;
+        data.status ||
+        "";
 
 
       playerSpam =
@@ -1221,7 +1228,7 @@ function pasangPlayerListener(){
 
 
         status.innerHTML =
-          "⛔ MENUNGGU RESET GAME";
+          "⛔ MENUNGGU RESET / BUKA SPAM";
 
 
         return;
@@ -1319,6 +1326,12 @@ function pasangPlayerListener(){
         buzzerLocked =
           false;
 
+
+        /*
+          Kalau sedang ada game yang masih
+          memiliki pemenang, jangan mengubah
+          tampilan hasil yang sedang tampil.
+        */
 
         if(
           !window.currentGameData ||
@@ -1483,6 +1496,12 @@ btn.addEventListener(
       now - lastClickTime <= SPAM_DELAY
     ){
 
+      /*
+        Pemain dianggap SPAM.
+
+        Status spam disimpan ke player.
+      */
+
       playerSpam = true;
 
       buzzerLocked = true;
@@ -1505,10 +1524,14 @@ btn.addEventListener(
 
 
       status.innerHTML =
-        "⛔ MENUNGGU RESET GAME";
+        "⛔ SPAM!";
 
 
       try{
+
+        /*
+          Tandai pemain sebagai SPAM.
+        */
 
         await db.ref(
           "players/" +
@@ -1516,6 +1539,53 @@ btn.addEventListener(
           "/spam"
         )
         .set(true);
+
+
+        /*
+          PENTING:
+
+          Kalau pemain yang melakukan spam
+          adalah PEMENANG saat ini,
+          maka kemenangan dibatalkan.
+
+          Kalau dia pemain KALAH,
+          game TIDAK disentuh.
+        */
+
+        await db.ref("game")
+        .transaction(
+          current => {
+
+            if(
+              current &&
+              current.clicked === true &&
+              current.playerID === playerID
+            ){
+
+              /*
+                Menghapus game akan membuat
+                ronde terbuka kembali untuk
+                pemain lain.
+
+                Hanya dilakukan jika player
+                yang spam adalah PEMENANG.
+              */
+
+              return null;
+
+            }
+
+
+            /*
+              Pemain bukan pemenang.
+
+              Game tetap dipertahankan.
+            */
+
+            return;
+
+          }
+        );
 
       }
 
@@ -1562,9 +1632,9 @@ btn.addEventListener(
 
 
     /*
-      Tombol sengaja tetap menerima
-      tap berikutnya agar double tap
-      bisa dideteksi sebagai SPAM.
+      Tombol sengaja tetap menerima tap
+      berikutnya agar double tap dapat
+      dideteksi sebagai SPAM.
     */
 
     btn.disabled =
@@ -1579,6 +1649,11 @@ btn.addEventListener(
       await db.ref("game")
       .transaction(
         current => {
+
+          /*
+            Hanya pemain pertama yang berhasil
+            mendapatkan game.
+          */
 
           if(
 
@@ -1649,7 +1724,7 @@ db.ref("game")
 
 
     // =============================================
-    // RESET GAME
+    // GAME RESET / PEMENANG DIBATALKAN
     // =============================================
 
     if(!data){
@@ -1684,7 +1759,7 @@ db.ref("game")
 
 
       status.innerHTML =
-        "⛔ MENUNGGU RESET GAME";
+        "⛔ MENUNGGU RESET / BUKA SPAM";
 
 
       buzzerLocked =
@@ -1705,10 +1780,8 @@ db.ref("game")
     ){
 
       /*
-        Jangan disable tombol total.
-
-        Kita masih membutuhkan tombol
-        untuk mendeteksi double tap.
+        Tombol tetap aktif agar pemain dapat
+        melakukan double tap dan terkena SPAM.
       */
 
       btn.disabled =
@@ -1818,6 +1891,9 @@ function resetGameUI(){
   /*
     Kalau masih SPAM,
     tetap terkunci.
+
+    Jadi membuka / menghapus game tidak
+    otomatis membuka pemain SPAM.
   */
 
   if(playerSpam){
@@ -1839,7 +1915,7 @@ function resetGameUI(){
 
 
     status.innerHTML =
-      "⛔ MENUNGGU RESET GAME";
+      "⛔ MENUNGGU RESET / BUKA SPAM";
 
 
     buzzerLocked =
@@ -1984,15 +2060,16 @@ db.ref("ranking")
   }
 );
 
+
 // =================================================
 // TOGGLE TOP PLAYER
 // =================================================
 
 const toggleRanking =
-  document.getElementById("toggleRanking");
+document.getElementById("toggleRanking");
 
 const ranking =
-  document.getElementById("ranking");
+document.getElementById("ranking");
 
 let rankingHidden = false;
 
@@ -2027,6 +2104,7 @@ toggleRanking.addEventListener(
 
   }
 );
+
 
 // =================================================
 // ESCAPE HTML
