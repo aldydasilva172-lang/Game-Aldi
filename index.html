@@ -508,6 +508,79 @@ input::placeholder{
   letter-spacing:1px;
 
 }
+/* ================= RANKING HEADER ================= */
+
+.ranking-header{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:8px;
+
+  margin-bottom:12px;
+
+}
+
+
+.ranking-header h2{
+
+  margin-bottom:0;
+
+  flex:1;
+
+}
+
+
+#toggleRanking{
+
+  border:none;
+
+  outline:none;
+
+  padding:5px 9px;
+
+  border-radius:8px;
+
+  background:
+  rgba(255,255,255,0.08);
+
+  border:
+  1px solid rgba(0,240,255,0.35);
+
+  color:#00f0ff;
+
+  font-family:'Orbitron',sans-serif;
+
+  font-size:8px;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:.2s;
+
+}
+
+
+#toggleRanking:hover{
+
+  background:
+  rgba(0,240,255,0.15);
+
+  box-shadow:
+  0 0 10px rgba(0,240,255,.35);
+
+}
+
+
+#toggleRanking:active{
+
+  transform:scale(.94);
+
+}
 
 
 .player{
@@ -826,14 +899,24 @@ RM KEMANG GAMES
 
 <div class="klasemen">
 
-  <h2>
-    🏆 TOP PLAYER
-  </h2>
+  <div class="ranking-header">
+
+    <h2>
+      🏆 TOP PLAYER
+    </h2>
+
+    <button
+      id="toggleRanking"
+      type="button"
+    >
+      HIDE
+    </button>
+
+  </div>
 
   <div id="ranking"></div>
 
 </div>
-
 
 <!-- GAME -->
 
@@ -1899,6 +1982,49 @@ db.ref("ranking")
   }
 );
 
+// =================================================
+// TOGGLE TOP PLAYER
+// =================================================
+
+const toggleRanking =
+  document.getElementById("toggleRanking");
+
+const ranking =
+  document.getElementById("ranking");
+
+let rankingHidden = false;
+
+
+toggleRanking.addEventListener(
+  "click",
+  function(){
+
+    rankingHidden =
+      !rankingHidden;
+
+
+    if(rankingHidden){
+
+      ranking.style.display =
+        "none";
+
+      toggleRanking.innerHTML =
+        "SHOW";
+
+    }
+
+    else{
+
+      ranking.style.display =
+        "";
+
+      toggleRanking.innerHTML =
+        "HIDE";
+
+    }
+
+  }
+);
 
 // =================================================
 // ESCAPE HTML
@@ -1955,14 +2081,9 @@ let offsetY =
   0;
 
 
-let startX =
-  window.innerWidth -
-  210;
+let startX = 15;
 
-
-let startY =
-  window.innerHeight -
-  230;
+let startY = 90;
 
 
 klasemen.style.left =
