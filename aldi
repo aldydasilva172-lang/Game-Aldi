@@ -226,6 +226,47 @@ body::after{
 }
 
 
+/* ================= NAMA PEMAIN ================= */
+
+.player-display{
+
+  display:inline-block;
+
+  margin-bottom:18px;
+
+  padding:10px 20px;
+
+  border-radius:15px;
+
+  background:
+  rgba(0,240,255,0.07);
+
+  border:
+  1px solid rgba(0,240,255,0.20);
+
+  backdrop-filter:blur(10px);
+
+  -webkit-backdrop-filter:blur(10px);
+
+  font-family:'Orbitron',sans-serif;
+
+  font-size:15px;
+
+  font-weight:700;
+
+  letter-spacing:1px;
+
+  color:#00f0ff;
+
+  text-shadow:
+  0 0 12px rgba(0,240,255,0.8);
+
+  box-shadow:
+  0 0 18px rgba(0,240,255,0.08);
+
+}
+
+
 /* ================= INPUT ================= */
 
 input{
@@ -827,6 +868,15 @@ input::placeholder{
   }
 
 
+  .player-display{
+
+    font-size:13px;
+
+    padding:9px 16px;
+
+  }
+
+
   .klasemen{
 
     width:160px;
@@ -934,6 +984,16 @@ RM KEMANG GAMES
 
   <div class="card">
 
+    <!-- NAMA PEMAIN -->
+
+    <div
+      id="playerDisplay"
+      class="player-display"
+    >
+      👤 BELUM LOGIN
+    </div>
+
+
     <div class="buzzer-wrap">
 
       <button
@@ -1033,6 +1093,9 @@ document.getElementById("loginStatus");
 
 const spamText =
 document.getElementById("spamText");
+
+const playerDisplay =
+document.getElementById("playerDisplay");
 
 
 // =================================================
@@ -1147,6 +1210,10 @@ function pasangPlayerListener(){
         window.currentGameData = null;
 
 
+        playerDisplay.innerHTML =
+          "👤 BELUM LOGIN";
+
+
         loginScreen
           .classList
           .remove("hidden");
@@ -1169,11 +1236,6 @@ function pasangPlayerListener(){
           "none";
 
 
-        /*
-          FIX:
-          Bersihkan SEMUA state visual buzzer.
-        */
-
         resetBuzzerColor();
 
 
@@ -1193,6 +1255,11 @@ function pasangPlayerListener(){
       namaPlayer =
         data.name ||
         namaPlayer;
+
+
+      playerDisplay.innerHTML =
+        "👤 " +
+        escapeHTML(namaPlayer);
 
 
       playerStatus =
@@ -1273,12 +1340,6 @@ function pasangPlayerListener(){
           "none";
 
 
-        /*
-          FIX:
-          Player tidak lagi dalam keadaan menang,
-          kalah, atau spam.
-        */
-
         resetBuzzerColor();
 
 
@@ -1324,16 +1385,6 @@ function pasangPlayerListener(){
           "";
 
 
-        /*
-          FIX:
-          Kalau tidak ada game aktif,
-          selalu kembalikan buzzer ke kondisi
-          awal.
-
-          Ini mencegah warna hijau/merah
-          tertinggal setelah reset.
-        */
-
         if(
           !window.currentGameData ||
           window.currentGameData.clicked !== true
@@ -1376,11 +1427,38 @@ pasangPlayerListener();
 
 
 // =================================================
+// NORMALISASI NAMA
+// =================================================
+
+function normalisasiNama(nama){
+
+  return nama
+    .replace(/\s+/g," ")
+    .trim()
+    .toLowerCase();
+
+}
+
+
+// =================================================
+// BUAT KEY NAMA
+// =================================================
+
+function namaKey(nama){
+
+  return encodeURIComponent(
+    normalisasiNama(nama)
+  );
+
+}
+
+
+// =================================================
 // PLAYER LOGIN
 // =================================================
 
 mulaiBtn.onclick =
-function(){
+async function(){
 
   const nama =
     loginNama.value.trim();
@@ -1396,8 +1474,12 @@ function(){
   }
 
 
-  namaPlayer =
-    nama;
+  const namaNormal =
+    normalisasiNama(nama);
+
+
+  const key =
+    namaKey(nama);
 
 
   mulaiBtn.disabled =
@@ -1408,28 +1490,146 @@ function(){
 
 
   loginStatus.innerHTML =
-    "⏳ Mengirim permintaan ke admin...";
+    "⏳ Mengamankan nama...";
 
 
-  db.ref(
-    "players/" + playerID
-  )
-  .set({
+  try{
 
-    name:
-      namaPlayer,
+    /*
+      =================================================
+      CLAIM NAMA DENGAN TRANSACTION
 
-    status:
-      "pending",
+      Ini yang mencegah:
 
-    spam:
-      false,
+      HP A → cek nama
+      HP B → cek nama
+      HP A → simpan
+      HP B → simpan
 
-    timestamp:
-      Date.now()
+      Karena transaction berjalan atomic,
+      hanya satu player yang bisa memiliki
+      nama tersebut.
+    */
 
-  })
-  .catch(error => {
+    const nameRef =
+      db.ref(
+        "playerNames/" +
+        key
+      );
+
+
+    const result =
+      await nameRef.transaction(
+        current => {
+
+          /*
+            BELUM ADA PEMILIK
+
+            Ambil nama ini.
+          */
+
+          if(current === null){
+
+            return playerID;
+
+          }
+
+
+          /*
+            SUDAH ADA PEMILIK.
+
+            Jangan ubah data.
+          */
+
+          return current;
+
+        }
+      );
+
+
+    /*
+      =================================================
+      CEK HASIL CLAIM
+      =================================================
+    */
+
+    const pemilikNama =
+      result.snapshot.val();
+
+
+    /*
+      Kalau pemiliknya bukan player kita,
+      berarti nama sudah digunakan.
+    */
+
+    if(
+      pemilikNama !== playerID
+    ){
+
+      mulaiBtn.disabled =
+        false;
+
+      loginNama.disabled =
+        false;
+
+
+      loginStatus.innerHTML =
+        "❌ NAMA SUDAH DIGUNAKAN!<br>" +
+        "Silakan gunakan nama lain.";
+
+
+      return;
+
+    }
+
+
+    /*
+      =================================================
+      NAMA BERHASIL DIKLAIM
+      =================================================
+    */
+
+    namaPlayer =
+      nama;
+
+
+    playerDisplay.innerHTML =
+      "👤 " +
+      escapeHTML(namaPlayer);
+
+
+    loginStatus.innerHTML =
+      "⏳ Mengirim permintaan ke admin...";
+
+
+    /*
+      Simpan data player seperti sebelumnya.
+    */
+
+    await db.ref(
+      "players/" +
+      playerID
+    )
+    .set({
+
+      name:
+        namaPlayer,
+
+      status:
+        "pending",
+
+      spam:
+        false,
+
+      timestamp:
+        Date.now()
+
+    });
+
+
+  }
+
+  catch(error){
 
     console.log(error);
 
@@ -1442,9 +1642,10 @@ function(){
 
 
     loginStatus.innerHTML =
-      "❌ Gagal mengirim permintaan";
+      "❌ Gagal mengamankan nama.<br>" +
+      "Silakan coba lagi.";
 
-  });
+  }
 
 };
 
@@ -1512,12 +1713,6 @@ btn.addEventListener(
       now - lastClickTime <= SPAM_DELAY
     ){
 
-      /*
-        Pemain dianggap SPAM.
-
-        Status spam disimpan ke player.
-      */
-
       playerSpam = true;
 
       buzzerLocked = true;
@@ -1545,10 +1740,6 @@ btn.addEventListener(
 
       try{
 
-        /*
-          Tandai pemain sebagai SPAM.
-        */
-
         await db.ref(
           "players/" +
           playerID +
@@ -1556,17 +1747,6 @@ btn.addEventListener(
         )
         .set(true);
 
-
-        /*
-          PENTING:
-
-          Kalau pemain yang melakukan spam
-          adalah PEMENANG saat ini,
-          maka kemenangan dibatalkan.
-
-          Kalau dia pemain KALAH,
-          game TIDAK disentuh.
-        */
 
         await db.ref("game")
         .transaction(
@@ -1578,25 +1758,10 @@ btn.addEventListener(
               current.playerID === playerID
             ){
 
-              /*
-                Menghapus game akan membuat
-                ronde terbuka kembali untuk
-                pemain lain.
-
-                Hanya dilakukan jika player
-                yang spam adalah PEMENANG.
-              */
-
               return null;
 
             }
 
-
-            /*
-              Pemain bukan pemenang.
-
-              Game tetap dipertahankan.
-            */
 
             return;
 
@@ -1647,12 +1812,6 @@ btn.addEventListener(
       true;
 
 
-    /*
-      Tombol sengaja tetap menerima tap
-      berikutnya agar double tap dapat
-      dideteksi sebagai SPAM.
-    */
-
     btn.disabled =
       false;
 
@@ -1665,11 +1824,6 @@ btn.addEventListener(
       await db.ref("game")
       .transaction(
         current => {
-
-          /*
-            Hanya pemain pertama yang berhasil
-            mendapatkan game.
-          */
 
           if(
 
@@ -1745,16 +1899,6 @@ db.ref("game")
 
     if(!data){
 
-      /*
-        FIX UTAMA:
-
-        Set currentGameData ke null terlebih dahulu,
-        lalu bersihkan warna buzzer.
-
-        Jadi warna hijau/merah/SPAM tidak bisa
-        tertinggal setelah game kosong.
-      */
-
       window.currentGameData = null;
 
 
@@ -1808,11 +1952,6 @@ db.ref("game")
       data.clicked === true
     ){
 
-      /*
-        Tombol tetap aktif agar pemain dapat
-        melakukan double tap dan terkena SPAM.
-      */
-
       btn.disabled =
         false;
 
@@ -1836,12 +1975,6 @@ db.ref("game")
       if(
         data.playerID === playerID
       ){
-
-        /*
-          FIX:
-          Pastikan class SPAM hilang dan
-          background pemenang diterapkan ulang.
-        */
 
         btn.classList
           .remove("spam");
@@ -1880,12 +2013,6 @@ db.ref("game")
 
       else{
 
-        /*
-          FIX:
-          Pastikan class SPAM hilang dan
-          background kalah diterapkan ulang.
-        */
-
         btn.classList
           .remove("spam");
 
@@ -1915,30 +2042,12 @@ db.ref("game")
 
 function resetBuzzerColor(){
 
-  /*
-    Hapus class SPAM.
-  */
-
   btn.classList.remove("spam");
-
-
-  /*
-    Bersihkan pesan SPAM.
-  */
 
   spamText.innerHTML = "";
 
-
-  /*
-    Paksa kembali background default.
-    !important tidak diperlukan karena
-    style inline memiliki prioritas lebih tinggi
-    daripada CSS class.
-  */
-
   btn.style.background =
     "linear-gradient(145deg,#00f0ff,#0066ff)";
-
 
 }
 
@@ -1949,27 +2058,8 @@ function resetBuzzerColor(){
 
 function resetGameUI(){
 
-  /*
-    =================================================
-    FIX UTAMA
-    =================================================
-
-    Apapun warna sebelumnya:
-
-    HIJAU = PEMENANG
-    MERAH = KALAH
-    MERAH GELAP = SPAM
-
-    semuanya dibersihkan terlebih dahulu.
-  */
-
   resetBuzzerColor();
 
-
-  /*
-    Kalau belum approved,
-    jangan aktifkan buzzer.
-  */
 
   if(
     playerStatus !== "approved"
@@ -1991,19 +2081,6 @@ function resetGameUI(){
 
   }
 
-
-  /*
-    Kalau masih SPAM,
-    tetap terkunci.
-
-    Ini tetap dipertahankan agar:
-
-    - Reset GAME tidak otomatis membuka SPAM
-    - Admin tetap harus BUKA SPAM
-
-    Tetapi warna akan kembali merah
-    hanya jika status SPAM memang masih true.
-  */
 
   if(playerSpam){
 
@@ -2036,10 +2113,6 @@ function resetGameUI(){
   }
 
 
-  /*
-    KONDISI NORMAL
-  */
-
   buzzerLocked =
     false;
 
@@ -2056,10 +2129,6 @@ function resetGameUI(){
     "auto";
 
 
-  /*
-    Pastikan sekali lagi tidak ada class SPAM.
-  */
-
   btn.classList
     .remove("spam");
 
@@ -2067,10 +2136,6 @@ function resetGameUI(){
   spamText.innerHTML =
     "";
 
-
-  /*
-    Pastikan background benar-benar kembali biru.
-  */
 
   btn.style.background =
     "linear-gradient(145deg,#00f0ff,#0066ff)";
