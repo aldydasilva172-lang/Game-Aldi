@@ -1433,8 +1433,33 @@ pasangPlayerListener();
 function normalisasiNama(nama){
 
   return nama
-    .replace(/\s+/g," ")
+
+    /*
+      Normalisasi Unicode.
+      Contoh karakter yang secara visual
+      terlihat sama akan dibuat lebih konsisten.
+    */
+    .normalize("NFKC")
+
+    /*
+      Hapus karakter zero-width / invisible.
+    */
+    .replace(
+      /[\u200B-\u200D\uFEFF]/g,
+      ""
+    )
+
+    /*
+      Samakan semua jenis whitespace
+      menjadi satu spasi.
+    */
+    .replace(
+      /\s+/g,
+      " "
+    )
+
     .trim()
+
     .toLowerCase();
 
 }
@@ -1478,8 +1503,23 @@ async function(){
     normalisasiNama(nama);
 
 
+  /*
+    Pastikan setelah normalisasi
+    nama masih memiliki isi.
+  */
+
+  if(!namaNormal){
+
+    loginStatus.innerHTML =
+      "⚠️ Nama tidak valid!";
+
+    return;
+
+  }
+
+
   const key =
-    namaKey(nama);
+    namaKey(namaNormal);
 
 
   mulaiBtn.disabled =
@@ -1498,17 +1538,14 @@ async function(){
     /*
       =================================================
       CLAIM NAMA DENGAN TRANSACTION
+      =================================================
 
-      Ini yang mencegah:
+      Firebase akan memproses transaction
+      secara atomic.
 
-      HP A → cek nama
-      HP B → cek nama
-      HP A → simpan
-      HP B → simpan
-
-      Karena transaction berjalan atomic,
-      hanya satu player yang bisa memiliki
-      nama tersebut.
+      HP A dan HP B yang mencoba nama sama
+      pada waktu hampir bersamaan tidak akan
+      sama-sama mendapatkan nama tersebut.
     */
 
     const nameRef =
@@ -1525,7 +1562,7 @@ async function(){
           /*
             BELUM ADA PEMILIK
 
-            Ambil nama ini.
+            Player ini mengambil nama.
           */
 
           if(current === null){
@@ -1536,9 +1573,9 @@ async function(){
 
 
           /*
-            SUDAH ADA PEMILIK.
+            SUDAH ADA PEMILIK
 
-            Jangan ubah data.
+            Jangan ubah data yang sudah ada.
           */
 
           return current;
@@ -1549,7 +1586,31 @@ async function(){
 
     /*
       =================================================
-      CEK HASIL CLAIM
+      PASTIKAN TRANSACTION BENAR-BENAR COMMITTED
+      =================================================
+    */
+
+    if(!result.committed){
+
+      mulaiBtn.disabled =
+        false;
+
+      loginNama.disabled =
+        false;
+
+
+      loginStatus.innerHTML =
+        "❌ Nama gagal diamankan.<br>" +
+        "Silakan coba lagi.";
+
+      return;
+
+    }
+
+
+    /*
+      =================================================
+      CEK PEMILIK NAMA
       =================================================
     */
 
@@ -1558,8 +1619,8 @@ async function(){
 
 
     /*
-      Kalau pemiliknya bukan player kita,
-      berarti nama sudah digunakan.
+      Jika pemilik bukan player ini,
+      nama sudah digunakan player lain.
     */
 
     if(
@@ -1576,7 +1637,6 @@ async function(){
       loginStatus.innerHTML =
         "❌ NAMA SUDAH DIGUNAKAN!<br>" +
         "Silakan gunakan nama lain.";
-
 
       return;
 
@@ -1603,7 +1663,7 @@ async function(){
 
 
     /*
-      Simpan data player seperti sebelumnya.
+      Simpan data player.
     */
 
     await db.ref(
@@ -1640,6 +1700,12 @@ async function(){
     loginNama.disabled =
       false;
 
+
+    /*
+      Jika gagal karena permission,
+      network, atau Firebase error,
+      jangan dianggap nama berhasil.
+    */
 
     loginStatus.innerHTML =
       "❌ Gagal mengamankan nama.<br>" +
